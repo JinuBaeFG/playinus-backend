@@ -13,12 +13,6 @@ const mime = require("mime-types");
 const { v4: uuid } = require("uuid");
 var cors = require("cors");
 
-process.env.NODE_ENV =
-  process.env.NODE_ENV &&
-  process.env.NODE_ENV.trim().toLowerCase() == "production"
-    ? "production"
-    : "development";
-
 const PORT = process.env.PORT;
 const server = new ApolloServer({
   resolvers,
@@ -120,7 +114,5 @@ const httpsServer = http.createServer(app);
 server.installSubscriptionHandlers(httpsServer);
 
 httpsServer.listen(PORT, () => {
-  process.env.NODE_ENV === "production"
-    ? console.log(`Server is running on ${process.env.OPER_URL}:${PORT}/`)
-    : console.log(`Server is running on ${process.env.LOCAL_URL}:${PORT}/`);
+  console.log(`Server is running on http://localhost:${PORT}/`);
 });
