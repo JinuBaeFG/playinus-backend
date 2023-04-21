@@ -10,48 +10,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Config {
+  id           Int      @id @default(autoincrement())
+  privacyTerms String?
+  gpsTerms     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AdminNotice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  discription String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AdminFaq {
+  id          Int      @id @default(autoincrement())
+  title       String
+  discription String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model User {
-  id               Int                @id @default(autoincrement())
-  firstName        String
-  lastName         String?
-  username         String             @unique
-  email            String             @unique
-  password         String
-  bio              String?
-  avatar           String?
-  photos           Photo[]
-  likes            Like[]
-  followers        User[]             @relation("FollowRelation")
-  following        User[]             @relation("FollowRelation")
-  comments         Comment[]
-  rooms            Room[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  Message          Message[]
-  group            Group[]
-  groupPresident   GroupPresident[]
-  tutor            Tutor[]
-  GroupJoinRequest GroupJoinRequest[]
+  id                  Int                   @id @default(autoincrement())
+  username            String                @unique
+  email               String                @unique
+  password            String
+  phoneNumber         String                @unique
+  gender              String?
+  avatar              String?
+  photos              Photo[]
+  likes               Like[]
+  followers           User[]                @relation("FollowRelation")
+  following           User[]                @relation("FollowRelation")
+  comments            Comment[]
+  rooms               Room[]
+  Message             Message[]
+  group               Group[]
+  groupPresident      GroupPresident[]
+  groupJoinRequest    GroupJoinRequest[]
+  tutorInquiry        TutorInquiry[]
+  tutorInquiryComment TutorInquiryComment[]
+  tutor               Tutor[]
+  board               Board[]
+  boardComment        BoardComment[]
+  boardLike           BoardLike[]
+  notice              Notice[]
+  noticeComment       NoticeComment[]
+  noticeLike          NoticeLike[]
+  gallery             Gallery[]
+  boardReComment      BoardReComment[]
+  noticeReComment     NoticeReComment[]
+  reComment           ReComment[]
+  kakaoConnect        Boolean               @default(false)
+  kakaoID             String?               @unique
+  naverConnect        Boolean               @default(false)
+  naverID             String?               @unique
+  googleConnect       Boolean               @default(false)
+  googleID            String?               @unique
+  appleConnect        Boolean               @default(false)
+  appleID             String?               @unique
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 }
 
 model Photo {
-  id               Int                @id @default(autoincrement())
-  user             User               @relation(fields: [userId], references: [id])
-  userId           Int
-  feedUpload       FeedUpload[]
-  feedCategoryList FeedCategoryList[]
-  caption          String?
-  hashtags         Hashtag[]
-  comments         Comment[]
-  likes            Like[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  id           Int          @id @default(autoincrement())
+  user         User         @relation(fields: [userId], references: [id])
+  userId       Int
+  feedUpload   FeedUpload[]
+  feedCategory String?
+  caption      String?
+  hashtags     Hashtag[]
+  comments     Comment[]
+  likes        Like[]
+  sportsEvent  String?
+  publicLevel  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model FeedCategoryList {
   id        Int      @id @default(autoincrement())
   name      String
-  photo     Photo[]
+  sortKey   Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -85,12 +130,25 @@ model Like {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  photo     Photo    @relation(fields: [photoId], references: [id])
+  id        Int         @id @default(autoincrement())
+  user      User        @relation(fields: [userId], references: [id])
+  photo     Photo       @relation(fields: [photoId], references: [id])
   payload   String
   userId    Int
   photoId   Int
+  reComment ReComment[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model ReComment {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+  payload   String
+  delYn     Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -99,27 +157,44 @@ model Comment {
 model Group {
   id               Int                @id @default(autoincrement())
   name             String             @unique
-  discription      String
-  activeArea       String
-  address          String
-  addrRoad         String
-  addAddr          String
-  zipcode          String
-  areaLatitude     String
-  areaLongitude    String
+  discription      String?
+  sidoName         String?
+  gusiName         String?
+  dongEubMyunName  String?
+  riName           String?
+  roadName         String?
+  buildingNumber   String?
+  zipcode          String?
+  activeArea       String?
+  address          String?
+  addrRoad         String?
+  areaLatitude     String?
+  areaLongitude    String?
   sportsEvent      String
-  imagePath        String
+  groupImage       GroupImage?        @relation(fields: [groupImageId], references: [id])
+  groupImageId     Int?
   groupPresident   GroupPresident     @relation(fields: [groupPresidentId], references: [id])
   groupPresidentId Int
   users            User[]
-  maxMember        Int
+  maxMember        String
   facility         Facility[]
   tutor            Tutor[]
   groupInfo        GroupInfo[]
   groupTag         GroupTag[]
+  groupJoinRequest GroupJoinRequest[]
+  board            Board[]
+  notice           Notice[]
+  gallery          Gallery[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  groupJoinRequest GroupJoinRequest[]
+}
+
+model GroupImage {
+  id        Int      @id @default(autoincrement())
+  imagePath String   @unique
+  group     Group[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model GroupPresident {
@@ -129,6 +204,8 @@ model GroupPresident {
   group     Group[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId])
 }
 
 model GroupInfo {
@@ -138,17 +215,19 @@ model GroupInfo {
   awardDate   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@unique([discription, awardDate])
 }
 
 model GroupTag {
   id        Int      @id @default(autoincrement())
   name      String
-  imagePath String
-  isUse     Boolean
-  isCustom  Boolean
+  imagePath String?
   group     Group[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([name])
 }
 
 model GroupJoinRequest {
@@ -164,26 +243,137 @@ model GroupJoinRequest {
 }
 
 // 그룹 - 끝
+// 튜터 - 시작
+model Tutor {
+  id                  Int                   @id @default(autoincrement())
+  user                User[]
+  name                String
+  discription         String?
+  sidoName            String?
+  gusiName            String?
+  dongEubMyunName     String?
+  riName              String?
+  roadName            String?
+  buildingNumber      String?
+  zipcode             String?
+  activeArea          String?
+  address             String?
+  addrRoad            String?
+  addAddr             String?
+  areaLatitude        String?
+  areaLongitude       String?
+  tutorImage          TutorImage?           @relation(fields: [tutorImageId], references: [id])
+  tutorImageId        Int?
+  group               Group[]
+  facility            Facility[]
+  tutorInfo           TutorInfo[]
+  tutorTag            TutorTag[]
+  tutorInquiry        TutorInquiry[]
+  tutorSportsEvent    TutorSportsEvent[]
+  TutorInquiryComment TutorInquiryComment[]
+  board               Board[]
+  notice              Notice[]
+  gallery             Gallery[]
+  access              Boolean               @default(false)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model TutorSportsEvent {
+  id        Int      @id @default(autoincrement())
+  name      String
+  tutor     Tutor    @relation(fields: [tutorId], references: [id])
+  tutorId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TutorInquiry {
+  id                  Int                   @id @default(autoincrement())
+  tutor               Tutor                 @relation(fields: [tutorId], references: [id])
+  tutorId             Int
+  user                User?                 @relation(fields: [userId], references: [id])
+  userId              Int?
+  tutorInquiryComment TutorInquiryComment[]
+  inquiryTitle        String
+  inquiryDiscription  String
+  inquiryResponse     Boolean?              @default(false)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model TutorInquiryComment {
+  id                  Int          @id @default(autoincrement())
+  user                User         @relation(fields: [userId], references: [id])
+  userId              Int
+  tutor               Tutor        @relation(fields: [tutorId], references: [id])
+  tutorId             Int
+  tutorInquiry        TutorInquiry @relation(fields: [tutorInquiryId], references: [id])
+  tutorInquiryId      Int
+  responseTitle       String
+  responseDiscription String
+  answerOk            Boolean?     @default(false)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model TutorImage {
+  id        Int      @id @default(autoincrement())
+  imagePath String
+  tutor     Tutor[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TutorInfo {
+  id          Int      @id @default(autoincrement())
+  discription String
+  awardDate   String
+  tutor       Tutor[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([discription, awardDate])
+}
+
+model TutorTag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  imagePath String?
+  tutor     Tutor[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+}
+
+// 튜터 - 끝
 // 시설 - 시작
 model Facility {
-  id             Int              @id @default(autoincrement())
-  name           String           @unique
-  discription    String
-  activeArea     String
-  address        String
-  addrRoad       String
-  addAddr        String
-  zipcode        String
-  areaLatitude   String
-  areaLongitude  String
-  operTime       String
-  group          Group[]
-  Tutor          Tutor[]
-  facilitySports FacilitySports[]
-  facilityInfo   FacilityInfo[]
-  facilityTag    FacilityTag[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  discription     String
+  sidoName        String
+  gusiName        String
+  dongEubMyunName String
+  riName          String
+  roadName        String
+  buildingNumber  Int
+  zipcode         Int
+  activeArea      String
+  address         String
+  addrRoad        String
+  addAddr         String
+  areaLatitude    String
+  areaLongitude   String
+  operTime        String
+  group           Group[]
+  tutor           Tutor[]
+  facilitySports  FacilitySports[]
+  facilityInfo    FacilityInfo[]
+  facilityTag     FacilityTag[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model FacilityInfo {
@@ -215,52 +405,146 @@ model FacilitySports {
 }
 
 // 시설 - 끝
-// 튜터 - 시작
-model Tutor {
-  id            Int         @id @default(autoincrement())
-  user          User        @relation(fields: [userId], references: [id])
-  userId        Int
-  name          String      @unique
-  activeArea    String
-  address       String
-  addrRoad      String
-  addAddr       String
-  zipcode       String
-  areaLatitude  String
-  areaLongitude String
-  group         Group[]
-  facility      Facility[]
-  tutorInfo     TutorInfo[]
-  tutorTag      TutorTag[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+// 공통 - 시작
+model Board {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  group        Group?         @relation(fields: [groupId], references: [id])
+  groupId      Int?
+  tutor        Tutor?         @relation(fields: [tutorId], references: [id])
+  tutorId      Int?
+  title        String
+  discription  String
+  sortation    String
+  hits         Int            @default(0)
+  boardComment BoardComment[]
+  boardLike    BoardLike[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
-model TutorInfo {
-  id          Int      @id @default(autoincrement())
-  discription String
-  awardDate   String
-  Tutor       Tutor[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model BoardComment {
+  id             Int              @id @default(autoincrement())
+  user           User             @relation(fields: [userId], references: [id])
+  userId         Int
+  board          Board            @relation(fields: [boardId], references: [id])
+  boardId        Int
+  payload        String
+  boardReComment BoardReComment[]
+  delYn          Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
-model TutorTag {
+model BoardReComment {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int
+  boardComment   BoardComment @relation(fields: [boardCommentId], references: [id])
+  boardCommentId Int
+  payload        String
+  delYn          Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model BoardLike {
   id        Int      @id @default(autoincrement())
-  name      String
-  imagePath String
-  isUse     Boolean
-  isCustom  Boolean
-  Tutor     Tutor[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  board     Board    @relation(fields: [boardId], references: [id])
+  boardId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([boardId, userId])
+}
+
+model Notice {
+  id            Int             @id @default(autoincrement())
+  user          User            @relation(fields: [userId], references: [id])
+  userId        Int
+  group         Group?          @relation(fields: [groupId], references: [id])
+  groupId       Int?
+  tutor         Tutor?          @relation(fields: [tutorId], references: [id])
+  tutorId       Int?
+  title         String
+  discription   String
+  sortation     String
+  hits          Int             @default(0)
+  noticeLike    NoticeLike[]
+  noticeComment NoticeComment[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model NoticeComment {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [userId], references: [id])
+  userId          Int
+  notice          Notice            @relation(fields: [noticeId], references: [id])
+  noticeId        Int
+  payload         String
+  NoticeReComment NoticeReComment[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model NoticeReComment {
+  id              Int           @id @default(autoincrement())
+  user            User          @relation(fields: [userId], references: [id])
+  userId          Int
+  noticeComment   NoticeComment @relation(fields: [noticeCommentId], references: [id])
+  noticeCommentId Int
+  payload         String
+  delYn           Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model NoticeLike {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  notice    Notice   @relation(fields: [noticeId], references: [id])
+  noticeId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([noticeId, userId])
+}
+
+model Gallery {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  group        Group?         @relation(fields: [groupId], references: [id])
+  groupId      Int?
+  tutor        Tutor?         @relation(fields: [tutorId], references: [id])
+  tutorId      Int?
+  title        String
+  discription  String
+  galleryImage GalleryImage[]
+  sortation    String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  imagePath String   @unique
+  gallery   Gallery  @relation(fields: [galleryId], references: [id])
+  galleryId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-// 튜터 - 끝
-// 공통 - 시작
 model SportsEvent {
   id        Int      @id @default(autoincrement())
   name      String
+  key       String   @unique
+  imagePath String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -268,6 +552,7 @@ model SportsEvent {
 model Tag {
   id        Int      @id @default(autoincrement())
   name      String
+  key       String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -275,6 +560,7 @@ model Tag {
 model Category {
   id        Int      @id @default(autoincrement())
   name      String
+  key       String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -297,6 +583,39 @@ model Message {
   userId    Int
   roomId    Int
   read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Banner {
+  id                  Int                   @id @default(autoincrement())
+  title               String
+  discription         String?
+  sidoName            String?
+  gusiName            String?
+  dongEubMyunName     String?
+  riName              String?
+  roadName            String?
+  buildingNumber      String?
+  zipcode             String?
+  activeArea          String?
+  address             String?
+  addrRoad            String?
+  areaLatitude        String?
+  areaLongitude       String?
+  sportsEvent         String?
+  sortation           String?
+  bannerImagePath     String
+  bannerDiscImagePath BannerDiscImagePath[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model BannerDiscImagePath {
+  id        Int      @id @default(autoincrement())
+  Banner    Banner?  @relation(fields: [bannerId], references: [id])
+  bannerId  Int?
+  imagePath String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

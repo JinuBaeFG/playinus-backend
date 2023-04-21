@@ -10,6 +10,9 @@ const resolvers: Resolvers = {
         include: {
           following: true,
           followers: true,
+          photos: true,
+          group: true,
+          tutor: true,
         },
       }),
   },

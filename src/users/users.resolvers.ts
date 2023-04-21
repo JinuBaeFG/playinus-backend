@@ -46,13 +46,54 @@ export default {
       });
       return Boolean(exists);
     },
-    photos: ({ id }) =>
-      client.user
+    photos: ({ id }) => {
+      return client.user
         .findUnique({
           where: {
             id,
           },
         })
-        .photos(),
+        .photos();
+    },
+    board: ({ id }) => {
+      return client.user
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .board();
+    },
+    notice: ({ id }) => {
+      return client.user
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .notice();
+    },
+    groupCount: ({ id }) => {
+      return client.group.count({
+        where: {
+          users: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+    },
+    tutorCount: ({ id }) => {
+      return client.tutor.count({
+        where: {
+          user: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+    },
   },
 };

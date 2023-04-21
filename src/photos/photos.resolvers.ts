@@ -39,7 +39,7 @@ export default {
         },
       });
     },
-    commentNumber: async ({ id }) => {
+    commentCount: async ({ id }) => {
       return client.comment.count({
         where: {
           photoId: id,
@@ -52,12 +52,12 @@ export default {
         include: { user: true },
       });
     },
-    isMine: protectedResolver(async ({ userId }, _, { loggedInUser }) => {
+    isMine: async ({ userId }, _, { loggedInUser }) => {
       if (!loggedInUser) {
         return false;
       }
       return userId === loggedInUser.id;
-    }),
+    },
     isLiked: async ({ id }, _, { loggedInUser }) => {
       if (!loggedInUser) {
         return false;
@@ -77,17 +77,6 @@ export default {
         return true;
       }
       return false;
-    },
-    feedCategoryList: async ({ id }) => {
-      return await client.feedCategoryList.findMany({
-        where: {
-          photo: {
-            some: {
-              id,
-            },
-          },
-        },
-      });
     },
   },
   Hashtag: {

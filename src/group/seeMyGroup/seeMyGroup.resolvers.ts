@@ -1,8 +1,8 @@
 import { protectedResolver } from "../../users/users.utils";
 
-const seeMyGroupResolver = (_, { offset }, { loggedInUser, client }) => {
-  return client.group.findMany({
-    take: 3,
+const seeMyGroupResolver = async (_, { offset }, { loggedInUser, client }) => {
+  return await client.group.findMany({
+    take: 5,
     skip: offset,
     where: {
       users: {
@@ -10,6 +10,11 @@ const seeMyGroupResolver = (_, { offset }, { loggedInUser, client }) => {
           id: loggedInUser.id,
         },
       },
+    },
+    select: {
+      id: true,
+      name: true,
+      groupImage: true,
     },
   });
 };

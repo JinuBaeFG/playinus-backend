@@ -29,7 +29,7 @@ const createCommentResolver = async (
       },
       user: {
         connect: {
-          id: loggedInUser.id,
+          id: 1,
         },
       },
     },
@@ -42,6 +42,6 @@ const createCommentResolver = async (
 
 export default {
   Mutation: {
-    createComment: protectedResolver(createCommentResolver),
+    createComment: createCommentResolver,
   },
 };

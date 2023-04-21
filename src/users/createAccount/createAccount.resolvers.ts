@@ -4,7 +4,7 @@ export default {
   Mutation: {
     createAccount: async (
       _,
-      { firstName, lastName, username, email, password },
+      { username, email, password, phoneNumber },
       { client }
     ) => {
       try {
@@ -21,7 +21,7 @@ export default {
           },
         });
         if (existingUser) {
-          throw new Error("This username/email is already taken.");
+          throw new Error("해당 이메일은 이미 사용중 입니다.");
         }
         const uglyPassword = await bcrypt.hash(password, 10);
 
@@ -29,8 +29,7 @@ export default {
           data: {
             username,
             email,
-            firstName,
-            lastName,
+            phoneNumber,
             password: uglyPassword,
           },
         });

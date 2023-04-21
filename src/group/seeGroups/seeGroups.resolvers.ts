@@ -1,8 +1,9 @@
+import client from "../../client";
 import { protectedResolver } from "../../users/users.utils";
 
-const seeGroupsResolver = (_, { offset }, { client }) => {
-  return client.group.findMany({
-    take: 3,
+const seeGroupsResolver = async (_, { offset }, { loggedInUser }) => {
+  return await client.group.findMany({
+    take: 5,
     skip: offset,
   });
 };

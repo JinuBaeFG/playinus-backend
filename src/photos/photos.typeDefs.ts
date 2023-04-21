@@ -7,8 +7,10 @@ export default gql`
     feedUpload: [FeedUpload]
     feedCategoryList: [FeedCategoryList]
     caption: String
+    sportsEvent: String
+    publicLevel: String
     likes: Int!
-    commentNumber: Int!
+    commentCount: Int!
     comments: [Comment]
     hashtag: [Hashtag]
     isMine: Boolean!
@@ -20,7 +22,7 @@ export default gql`
   type FeedCategoryList {
     id: Int
     name: String
-    photo: Photo
+    sortKey: Int
     createdAt: String!
     updatedAt: String!
   }

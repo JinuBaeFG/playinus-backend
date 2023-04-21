@@ -12,11 +12,18 @@ export default gql`
     bio: String
     avatar: String
     photos: [Photo]
+    group: [Group]
+    tutor: [Tutor]
     following: [User]
     followers: [User]
     totalFollowing: Int!
     totalFollowers: Int!
     isMe: Boolean!
     isFollowing: Boolean!
+    groupCount: Int!
+    tutorCount: Int!
+    board: [Board]
+    notice: [Notice]
+    gallery: [Gallery]
   }
 `;

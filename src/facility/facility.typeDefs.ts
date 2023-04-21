@@ -5,11 +5,17 @@ export default gql`
     id: Int
     name: String
     discription: String
+    sidoName: String
+    gusiName: String
+    dongEubMyunName: String
+    riName: String
+    roadName: String
+    buildingNumber: Int
+    zipcode: Int
     activeArea: String
     address: String
     addrRoad: String
     addAddr: String
-    zipcode: String
     areaLatitude: String
     areaLongitude: String
     operTime: String

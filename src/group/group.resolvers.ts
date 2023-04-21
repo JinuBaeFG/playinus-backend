@@ -4,12 +4,13 @@ import { protectedResolver } from "../users/users.utils";
 export default {
   Group: {
     users: ({ id }) => {
-      return client.group.findMany({
+      return client.user.findMany({
         where: {
-          id,
-        },
-        select: {
-          users: true,
+          group: {
+            some: {
+              id,
+            },
+          },
         },
       });
     },
@@ -60,26 +61,40 @@ export default {
     groupPresident: ({ id }, _, { loggedInUser }) => {
       return client.groupPresident.findFirst({
         where: {
-          userId: loggedInUser.id,
           group: {
             some: {
               id,
             },
           },
+        },
+        include: {
+          user: true,
         },
       });
     },
-    isPresident: ({ id }, _, { loggedInUser }) => {
-      return client.groupPresident.findFirst({
+    isPresident: async ({ id }, _, { loggedInUser }) => {
+      if (!loggedInUser) {
+        return false;
+      }
+      const ok = await client.groupPresident.findFirst({
         where: {
-          userId: loggedInUser.id,
           group: {
             some: {
               id,
             },
           },
+          userId: loggedInUser.id,
+        },
+        select: {
+          userId: true,
         },
       });
+
+      if (ok) {
+        return true;
+      } else {
+        return false;
+      }
     },
     isJoin: async ({ id }, _, { loggedInUser }) => {
       if (!loggedInUser) {

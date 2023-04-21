@@ -5,19 +5,25 @@ export default gql`
     id: Int!
     name: String
     discription: String
+    sidoName: String
+    gusiName: String
+    dongEubMyunName: String
+    riName: String
+    roadName: String
+    buildingNumber: String
+    zipcode: String
     activeArea: String
     address: String
     addrRoad: String
     addAddr: String
-    zipcode: String
     areaLatitude: String
     areaLongitude: String
     sportsEvent: String
-    imagePath: String
+    groupImage: [GroupImage]
     groupPresident: GroupPresident
     users: [User]
     userCount: Int
-    maxMember: Int
+    maxMember: String
     facility: [Facility]
     groupInfo: [GroupInfo]
     groupTag: [GroupTag]
@@ -27,6 +33,14 @@ export default gql`
     isJoin: Boolean
     isJoining: Boolean
     isPresident: Boolean
+  }
+
+  type GroupImage {
+    id: Int!
+    imagePath: String
+    groupId: Group
+    createdAt: String!
+    updatedAt: String!
   }
 
   type GroupPresident {
@@ -48,8 +62,7 @@ export default gql`
   type GroupTag {
     id: Int!
     name: String
-    isUse: Boolean
-    isCustom: Boolean
+    imagePath: String
     group: [Group]
     createdAt: String!
     updatedAt: String!
@@ -59,6 +72,14 @@ export default gql`
     id: Int!
     group: Group
     user: User
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type GroupImage {
+    id: Int!
+    imagePath: String
+    groupId: Group
     createdAt: String!
     updatedAt: String!
   }
