@@ -5,7 +5,7 @@ export default gql`
     id: Int!
     user: User!
     feedUpload: [FeedUpload]
-    feedCategoryList: [FeedCategoryList]
+    feedCategory: String
     caption: String
     sportsEvent: String
     publicLevel: String

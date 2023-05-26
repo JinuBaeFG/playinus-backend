@@ -13,11 +13,12 @@ const joinGroupResolver = async (_, { id }, { loggedInUser, client }) => {
     };
   }
   const joinWhere = {
-    groupId_userId: {
+    userId_groupId: {
       groupId: id,
       userId: loggedInUser.id,
     },
   };
+
   const join = await client.groupJoinRequest.findUnique({
     where: joinWhere,
   });
@@ -28,11 +29,11 @@ const joinGroupResolver = async (_, { id }, { loggedInUser, client }) => {
   } else {
     await client.groupJoinRequest.create({
       data: {
-        groupId: {
-          connect: id,
+        group: {
+          connect: { id },
         },
-        userId: {
-          connect: loggedInUser.id,
+        user: {
+          connect: { id: loggedInUser.id },
         },
       },
     });

@@ -35,6 +35,7 @@ export default gql`
   input TutorSportsEventInput {
     id: Int
     name: String
+    imagePath: String
     isChecked: Boolean
   }
 

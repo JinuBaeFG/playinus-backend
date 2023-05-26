@@ -13,6 +13,17 @@ export default {
         },
       });
     },
+    userCount: ({ id }) => {
+      return client.user.count({
+        where: {
+          tutor: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+    },
     user: ({ id }) => {
       return client.user.findFirst({
         where: {
@@ -88,7 +99,7 @@ export default {
         },
       });
     },
-    isTutor: ({ id }, _, { loggedInUser }) => {
+    isJoin: ({ id }, _, { loggedInUser }) => {
       if (!loggedInUser) {
         return false;
       }
@@ -103,6 +114,44 @@ export default {
         },
         select: {
           id: true,
+        },
+      });
+
+      if (ok) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    tutorPresident: ({ id }, _, { loggedInUser }) => {
+      return client.tutorPresident.findFirst({
+        where: {
+          tutor: {
+            some: {
+              id,
+            },
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+    },
+    isPresident: async ({ id }, _, { loggedInUser }) => {
+      if (!loggedInUser) {
+        return false;
+      }
+      const ok = await client.tutorPresident.findFirst({
+        where: {
+          tutor: {
+            some: {
+              id,
+            },
+          },
+          userId: loggedInUser.id,
+        },
+        select: {
+          userId: true,
         },
       });
 

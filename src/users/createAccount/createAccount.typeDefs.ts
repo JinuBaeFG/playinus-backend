@@ -11,6 +11,10 @@ export default gql`
       email: String!
       password: String!
       phoneNumber: String!
+      interlock: String
+      uid: String
+      privacyAccess: Boolean
+      usetermAccess: Boolean
     ): CreateAccountResult!
   }
 `;

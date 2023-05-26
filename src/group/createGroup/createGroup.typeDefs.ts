@@ -22,7 +22,7 @@ export default gql`
       maxMember: String
       groupInfo: [GroupInfoInput]
       groupTag: [GroupTagInput]
-    ): MutationResponse!
+    ): Group
   }
 
   input GroupInfoInput {

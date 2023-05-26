@@ -8,24 +8,26 @@ const uploadPhotoResolvers = async (
   { loggedInUser }
 ) => {
   let imagePath;
-  if (files) {
-    imagePath = await uploadToAWS(files, 0, sortation);
+
+  if (files !== null && files !== undefined) {
+    imagePath = await uploadToAWS(files, loggedInUser.id, sortation);
   }
 
   return client.photo.create({
     data: {
-      ...(imagePath.length > 0 && {
-        feedUpload: {
-          connectOrCreate: imagePath,
-        },
-      }),
+      ...(imagePath !== null &&
+        imagePath !== undefined && {
+          feedUpload: {
+            connectOrCreate: imagePath,
+          },
+        }),
       caption,
       publicLevel,
       sportsEvent,
       feedCategory,
       user: {
         connect: {
-          id: 1,
+          id: loggedInUser.id,
         },
       },
     },

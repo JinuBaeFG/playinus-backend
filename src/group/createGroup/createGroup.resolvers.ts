@@ -31,7 +31,7 @@ const createGroupResolver = async (
   if (file !== undefined && file.length > 0) {
     imagePath = await uploadToAWS(file, loggedInUser.id, "Group");
   }
-  console.log(groupInfo.length);
+
   let groupActiveInfo;
   if (groupInfo !== undefined && groupInfo.length > 0) {
     groupActiveInfo = groupInfo.map((item) => ({
@@ -59,7 +59,7 @@ const createGroupResolver = async (
     }));
   }
 
-  const createCheck = await client.group.create({
+  return client.group.create({
     data: {
       name,
       discription,
@@ -90,8 +90,8 @@ const createGroupResolver = async (
       },
       ...(imagePath !== undefined &&
         imagePath.length > 0 && {
-          imagePath: {
-            connectOrCreate: imagePath,
+          groupImage: {
+            connectOrCreate: imagePath[0],
           },
         }),
       ...(groupInfo !== undefined &&
@@ -108,14 +108,6 @@ const createGroupResolver = async (
         }),
     },
   });
-
-  if (!createCheck) {
-    return { ok: false, error: "그룹을 만들지 못했습니다." };
-  } else {
-    return {
-      ok: true,
-    };
-  }
 };
 
 export default {

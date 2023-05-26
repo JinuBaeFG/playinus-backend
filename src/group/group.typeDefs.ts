@@ -19,7 +19,7 @@ export default gql`
     areaLatitude: String
     areaLongitude: String
     sportsEvent: String
-    groupImage: [GroupImage]
+    groupImage: GroupImage
     groupPresident: GroupPresident
     users: [User]
     userCount: Int
@@ -69,7 +69,7 @@ export default gql`
   }
 
   type GroupJoinRequest {
-    id: Int!
+    id: Int
     group: Group
     user: User
     createdAt: String!

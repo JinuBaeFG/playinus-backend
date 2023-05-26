@@ -5,6 +5,7 @@ export default gql`
     id: Int
     privacyTerms: String
     gpsTerms: String
+    useTerms: String
     createdAt: String
     updatedAt: String
   }

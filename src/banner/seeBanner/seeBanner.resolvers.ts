@@ -1,5 +1,5 @@
 const seeBannerResolvers = async (_, { id }, { client }) => {
-  return client.banner.findUnique({
+  return await client.banner.findUnique({
     where: {
       id,
     },

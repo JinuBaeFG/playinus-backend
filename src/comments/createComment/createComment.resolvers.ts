@@ -29,7 +29,7 @@ const createCommentResolver = async (
       },
       user: {
         connect: {
-          id: 1,
+          id: loggedInUser.id,
         },
       },
     },

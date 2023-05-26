@@ -1,5 +1,5 @@
 const seeFacilityResolvers = async (_, { id }, { client }) => {
-  return client.facility.findUnique({
+  return await client.facility.findUnique({
     where: {
       id,
     },

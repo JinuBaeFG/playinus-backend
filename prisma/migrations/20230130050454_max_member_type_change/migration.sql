@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Group" ALTER COLUMN "maxMember" SET DATA TYPE TEXT;

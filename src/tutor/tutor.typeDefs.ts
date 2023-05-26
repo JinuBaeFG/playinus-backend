@@ -26,9 +26,22 @@ export default gql`
     tutorTag: [TutorTag]
     tutorInquiry: [TutorInquiry]
     tutorSportsEvent: [TutorSportsEvent]
-    isTutor: Boolean
+    isJoin: Boolean
+    tutorPresident: TutorPresident
+    isPresident: Boolean
+    userCount: Int
+    maxMember: Int
     createdAt: String!
     updatedAt: String!
+  }
+
+  type RequestAddTutor {
+    id: Int!
+    user: User
+    title: String
+    discription: String
+    createdAt: String
+    updatedAt: String
   }
 
   type TutorSportsEvent {
@@ -85,6 +98,13 @@ export default gql`
     responseTitle: String
     responseDiscription: String
     answerOk: Boolean
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type TutorPresident {
+    id: Int!
+    user: User!
     createdAt: String!
     updatedAt: String!
   }

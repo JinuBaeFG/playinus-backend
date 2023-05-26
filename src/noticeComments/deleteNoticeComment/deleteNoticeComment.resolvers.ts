@@ -24,14 +24,27 @@ const deleteNoticeCommentResolver = async (
       error: "삭제할 권한이 없습니다.",
     };
   } else {
-    await client.noticeComment.delete({
+    const recomment = await client.noticeReComment.findMany({
       where: {
-        id,
+        noticeCommentId: id,
       },
     });
-    return {
-      ok: true,
-    };
+
+    if (recomment.length === 0) {
+      await client.noticeComment.delete({
+        where: {
+          id,
+        },
+      });
+      return {
+        ok: true,
+      };
+    } else {
+      return {
+        ok: false,
+        error: `답글이 존재하여 \n 삭제할 수 없습니다.`,
+      };
+    }
   }
 };
 

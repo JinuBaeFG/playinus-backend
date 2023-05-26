@@ -4,16 +4,14 @@ export default gql`
   type EditProfileResult {
     ok: Boolean!
     error: String
+    id: Int!
   }
   type Mutation {
     editProfile(
-      firstName: String
-      lastName: String
+      id: Int!
       username: String
-      email: String
-      password: String
-      bio: String
       avatar: Upload
+      gender: String
     ): EditProfileResult!
   }
 `;

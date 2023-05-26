@@ -12,22 +12,34 @@ const deletePhotoResolvers = async (_, { id }, { loggedInUser, client }) => {
   if (!photo) {
     return {
       ok: false,
-      error: "Photo not Found.",
+      error: "피드가 존재하지 않습니다.",
     };
   } else if (photo.userId !== loggedInUser.id) {
     return {
       ok: false,
-      error: "Not authorized.",
+      error: "삭제할 권한이 없습니다.",
     };
   } else {
-    await client.photo.delete({
+    const comment = await client.comment.findMany({
       where: {
-        id,
+        photoId: id,
       },
     });
-    return {
-      ok: true,
-    };
+    if (comment.length === 0) {
+      await client.photo.delete({
+        where: {
+          id,
+        },
+      });
+      return {
+        ok: true,
+      };
+    } else {
+      return {
+        ok: false,
+        error: `댓글이 존재하여 \n 삭제할 수 없습니다.`,
+      };
+    }
   }
 };
 

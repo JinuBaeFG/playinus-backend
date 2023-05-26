@@ -1,14 +1,14 @@
 const editConfigResolvers = async (
   _,
-  { id, privacyTerms, gpsTerms },
+  { id, privacyTerms, gpsTerms, useTerms },
   { client }
 ) => {
-  console.log(id, privacyTerms, gpsTerms);
   try {
     await client.config.update({
       data: {
         privacyTerms,
         gpsTerms,
+        useTerms,
       },
       where: {
         id,

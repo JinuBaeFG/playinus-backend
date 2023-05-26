@@ -45,7 +45,6 @@ export const uploadToLocals = async (files, sortation) => {
   for (let i = 0; i < files.length; i++) {
     promises.push(await uploadToLocal(files[i], sortation));
   }
-
   return promises;
 };
 
@@ -53,7 +52,7 @@ export const uploadToLocal = async (file, sortation) => {
   try {
     const { filename, createReadStream } = await file;
     const newFilename = `${Date.now()}-${filename}`;
-    const readStream = await createReadStream();
+    const readStream = createReadStream();
     const writeStream = createWriteStream(
       process.cwd() + "/uploads/" + sortation + "/" + newFilename
     );

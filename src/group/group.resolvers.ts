@@ -58,6 +58,17 @@ export default {
         },
       });
     },
+    groupImage: ({ id }, _, { loggedInUser }) => {
+      return client.groupImage.findFirst({
+        where: {
+          group: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+    },
     groupPresident: ({ id }, _, { loggedInUser }) => {
       return client.groupPresident.findFirst({
         where: {

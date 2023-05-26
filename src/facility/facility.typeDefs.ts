@@ -15,16 +15,26 @@ export default gql`
     activeArea: String
     address: String
     addrRoad: String
-    addAddr: String
+    detailAddress: String
     areaLatitude: String
     areaLongitude: String
     operTime: String
     group: [Group]
+    tutor: [Tutor]
+    facilityImage: [FacilityImage]
     facilitySports: [FacilitySports]
     facilityInfo: [FacilityInfo]
     facilityTag: [FacilityTag]
     createdAt: String
     updatedAt: String
+  }
+
+  type FacilityImage {
+    id: Int!
+    facilityId: Facility
+    imagePath: String
+    createdAt: String!
+    updatedAt: String!
   }
 
   type FacilityInfo {

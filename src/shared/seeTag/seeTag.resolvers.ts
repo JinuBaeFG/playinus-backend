@@ -1,7 +1,15 @@
 export default {
   Query: {
-    seeTag: async (_, { offset }, { client }) => {
-      return await client.tag.findMany({});
+    seeTag: async (_, { sortation }, { client }) => {
+      if (sortation !== undefined && sortation !== null) {
+        return await client.tag.findMany({
+          where: {
+            sortation,
+          },
+        });
+      } else {
+        return await client.tag.findMany({});
+      }
     },
   },
 };
