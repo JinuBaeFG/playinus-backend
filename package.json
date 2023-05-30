@@ -1,6 +1,6 @@
 {
   "name": "playinus",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "playinus Backend;",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server --ext ts,js --delay 2",
