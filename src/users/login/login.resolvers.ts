@@ -4,22 +4,22 @@ import { Resolvers } from "../../types";
 
 const resolvers: Resolvers = {
   Mutation: {
-    login: async (_, { username, password }, { client }) => {
+    login: async (_, { email, password }, { client }) => {
       try {
         const checkUsername = await client.user.findFirst({
-          where: { username },
+          where: { email },
         });
         if (!checkUsername) {
           return {
             ok: false,
-            error: "User not found.",
+            error: "존재하지 않는 사용자 입니다.",
           };
         }
         const checkPw = await bcrypt.compare(password, checkUsername.password);
         if (!checkPw) {
           return {
             ok: false,
-            error: "Incorrect Password.",
+            error: "올바르지 않은 비밀번호 입니다.",
           };
         }
         const token = await jwt.sign(

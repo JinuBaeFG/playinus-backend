@@ -2,6 +2,11 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Mutation {
-    joinAccess(id: Int!, groupId: Int!): MutationResponse!
+    joinAccess(
+      id: Int!
+      userId: Int!
+      groupId: Int!
+      username: String
+    ): MutationResponse!
   }
 `;

@@ -2,57 +2,60 @@ import client from "../client";
 
 export default {
   User: {
-    totalFollowing: ({ id }) => {
-      return client.user.count({
-        where: {
-          followers: {
-            some: {
-              id,
-            },
-          },
-        },
-      });
-    },
-    totalFollowers: ({ id }) => {
-      return client.user.count({
-        where: {
-          following: {
-            some: {
-              id,
-            },
-          },
-        },
-      });
-    },
     isMe: ({ id }, _, { loggedInUser }) => {
       if (!loggedInUser) {
         return false;
       }
       return id === loggedInUser.id;
     },
-    isFollowing: async ({ id }, _, { loggedInUser }) => {
-      if (!loggedInUser) {
-        return false;
-      }
-      const exists = await client.user.count({
+    photos: ({ id }) => {
+      return client.user
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .photos();
+    },
+    board: ({ id }) => {
+      return client.user
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .board();
+    },
+    notice: ({ id }) => {
+      return client.user
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .notice();
+    },
+    groupCount: ({ id }) => {
+      return client.group.count({
         where: {
-          username: loggedInUser.username,
-          following: {
+          users: {
             some: {
               id,
             },
           },
         },
       });
-      return Boolean(exists);
     },
-    photos: ({ id }) =>
-      client.user
-        .findUnique({
-          where: {
-            id,
+    tutorCount: ({ id }) => {
+      return client.tutor.count({
+        where: {
+          user: {
+            some: {
+              id,
+            },
           },
-        })
-        .photos(),
+        },
+      });
+    },
   },
 };

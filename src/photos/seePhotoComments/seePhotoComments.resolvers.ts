@@ -1,16 +1,20 @@
 export default {
   Query: {
-    seePhotoComments: async (_, { id }, { client }) => {
-      return await client.photo
-        .findMany({
-          where: {
-            photoId: id,
-          },
-          orderBy: {
-            createAt: "desc",
-          },
-        })
-        .Comment();
+    seePhotoComments: async (_, { id, offset }, { client }) => {
+      return await client.comment.findMany({
+        take: 5,
+        skip: offset,
+        where: {
+          photoId: id,
+        },
+        include: {
+          user: true,
+          photo: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
     },
   },
 };

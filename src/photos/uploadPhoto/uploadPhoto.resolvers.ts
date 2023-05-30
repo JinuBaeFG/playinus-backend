@@ -4,19 +4,27 @@ import { protectedResolver } from "../../users/users.utils";
 
 const uploadPhotoResolvers = async (
   _,
-  { files, caption, sortation },
+  { files, caption, sortation, publicLevel, sportsEvent, feedCategory },
   { loggedInUser }
 ) => {
-  const imagePath = await uploadToAWS(files, loggedInUser.id, sortation);
+  let imagePath;
+
+  if (files !== null && files !== undefined) {
+    imagePath = await uploadToAWS(files, loggedInUser.id, sortation);
+  }
 
   return client.photo.create({
     data: {
-      ...(imagePath.length > 0 && {
-        feedUpload: {
-          connectOrCreate: imagePath,
-        },
-      }),
+      ...(imagePath !== null &&
+        imagePath !== undefined && {
+          feedUpload: {
+            connectOrCreate: imagePath,
+          },
+        }),
       caption,
+      publicLevel,
+      sportsEvent,
+      feedCategory,
       user: {
         connect: {
           id: loggedInUser.id,
@@ -28,6 +36,6 @@ const uploadPhotoResolvers = async (
 
 export default {
   Mutation: {
-    uploadPhoto: protectedResolver(uploadPhotoResolvers),
+    uploadPhoto: uploadPhotoResolvers,
   },
 };

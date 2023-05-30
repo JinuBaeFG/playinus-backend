@@ -1,18 +1,24 @@
-import { Resolvers } from "../../types";
+import { deCryptFunction } from "../users.utils";
 
-const resolvers: Resolvers = {
-  Query: {
-    seeProfile: (_, { username }, { client }) =>
-      client.user.findUnique({
-        where: {
-          username,
-        },
-        include: {
-          following: true,
-          followers: true,
-        },
-      }),
-  },
+const seeProfileResolver = async (_, { id }, { client }) => {
+  const profile = await client.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      photos: true,
+      group: true,
+      tutor: true,
+    },
+  });
+
+  profile.phoneNumber = deCryptFunction(profile.phoneNumber);
+
+  return profile;
 };
 
-export default resolvers;
+export default {
+  Query: {
+    seeProfile: seeProfileResolver,
+  },
+};

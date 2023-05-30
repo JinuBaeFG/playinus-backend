@@ -7,11 +7,14 @@ export default gql`
   }
   type Mutation {
     createAccount(
-      firstName: String!
-      lastName: String
       username: String!
       email: String!
       password: String!
+      phoneNumber: String!
+      interlock: String
+      uid: String
+      privacyAccess: Boolean
+      usetermAccess: Boolean
     ): CreateAccountResult!
   }
 `;

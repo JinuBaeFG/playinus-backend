@@ -7,6 +7,10 @@ export default {
         where: {
           id: loggedInUser.id,
         },
+        include: {
+          tutor: true,
+          group: true,
+        },
       })
     ),
   },

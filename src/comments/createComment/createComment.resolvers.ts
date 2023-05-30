@@ -42,6 +42,6 @@ const createCommentResolver = async (
 
 export default {
   Mutation: {
-    createComment: protectedResolver(createCommentResolver),
+    createComment: createCommentResolver,
   },
 };

@@ -9,25 +9,38 @@ const deleteCommentResolver = async (_, { id }, { loggedInUser, client }) => {
       userId: true,
     },
   });
+  console.log(comment.userId, loggedInUser.id);
   if (!comment) {
     return {
       ok: false,
-      error: "Comment not found.",
+      error: "댓글이 존재하지 않습니다.",
     };
   } else if (comment.userId !== loggedInUser.id) {
     return {
       ok: false,
-      error: "Not authorized.",
+      error: "삭제할 권한이 없습니다.",
     };
   } else {
-    await client.comment.delete({
+    const recomment = await client.reComment.findMany({
       where: {
-        id,
+        commentId: id,
       },
     });
-    return {
-      ok: true,
-    };
+    if (recomment.length === 0) {
+      await client.comment.delete({
+        where: {
+          id,
+        },
+      });
+      return {
+        ok: true,
+      };
+    } else {
+      return {
+        ok: false,
+        error: `답글이 존재하여 \n 삭제할 수 없습니다.`,
+      };
+    }
   }
 };
 

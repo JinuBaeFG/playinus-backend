@@ -7,6 +7,8 @@ export default gql`
     photo: Photo!
     payload: String!
     isMine: Boolean!
+    reComments: [ReComment]
+    reCommentCount: Int
     createdAt: String!
     updatedAt: String!
   }

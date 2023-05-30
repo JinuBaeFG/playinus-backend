@@ -4,7 +4,7 @@ import { uploadToS3 } from "../../shared/shared.util";
 
 const resolversFn = async (
   _,
-  { firstName, lastName, username, email, password: newPassword, bio, avatar },
+  { id, username, avatar, gender },
   { loggedInUser, client }
 ) => {
   let avatarUrl = null;
@@ -20,28 +20,22 @@ const resolversFn = async (
     avatarUrl = `http://localhost:4000/static/${newFilename}`;*/
   }
 
-  let ulgyPassword = null;
-  if (newPassword) {
-    ulgyPassword = await bcrypt.hash(newPassword, 10);
-  }
-
   const updateUser = await client.user.update({
     where: {
       id: loggedInUser.id,
     },
     data: {
-      firstName,
-      lastName,
+      id,
       username,
-      email,
-      bio,
-      ...(ulgyPassword && { password: ulgyPassword }),
+      avatar,
+      gender,
       ...(avatarUrl && { avatar: avatarUrl }),
     },
   });
 
   if (updateUser.id) {
     return {
+      id: loggedInUser.id,
       ok: true,
     };
   } else {
