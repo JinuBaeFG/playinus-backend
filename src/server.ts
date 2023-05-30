@@ -109,7 +109,7 @@ app.get("/api/certified", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.status(200).json({ crtNumber: crtNumber });
 
-  /*axios({
+  axios({
     method: "POST",
     url: `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.NAVER_SMS_SERVICE_ID}/messages`,
     headers: {
@@ -137,7 +137,7 @@ app.get("/api/certified", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-    });*/
+    });
 });
 
 app.get("/api/navermaps", (req, res) => {
