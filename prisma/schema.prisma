@@ -79,6 +79,18 @@ model User {
   report              Report[]
   bugReport           BugReport[]
   requestAddFacility  RequestAddFacility[]
+  blockUser           BlockUser[]           @relation("BlockUsers")
+  blockedBy           BlockUser[]           @relation("BlockedBy")
+}
+
+model BlockUser {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation("BlockUsers", fields: [userId], references: [id], onDelete: Cascade)
+  blockedById Int?     @unique
+  blockedBy   User?    @relation("BlockedBy", fields: [blockedById], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Photo {
@@ -92,7 +104,7 @@ model Photo {
   feedCategory String?
   comments     Comment[]
   likes        Like[]
-  user         User         @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   feedUpload   FeedUpload[] @relation("FeedUploadToPhoto")
   hashtags     Hashtag[]    @relation("HashtagToPhoto")
   Report       Report[]
@@ -128,8 +140,8 @@ model Like {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  photo     Photo    @relation(fields: [photoId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  photo     Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([photoId, userId])
 }
@@ -141,8 +153,8 @@ model Comment {
   photoId   Int
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  photo     Photo       @relation(fields: [photoId], references: [id])
-  user      User        @relation(fields: [userId], references: [id])
+  photo     Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   reComment ReComment[]
 }
 
@@ -154,8 +166,8 @@ model ReComment {
   delYn     Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Group {
@@ -182,8 +194,8 @@ model Group {
   groupImageId     Int?
   board            Board[]
   gallery          Gallery[]
-  groupImage       GroupImage?        @relation(fields: [groupImageId], references: [id])
-  groupPresident   GroupPresident     @relation(fields: [groupPresidentId], references: [id])
+  groupImage       GroupImage?        @relation(fields: [groupImageId], references: [id], onDelete: Cascade)
+  groupPresident   GroupPresident     @relation(fields: [groupPresidentId], references: [id], onDelete: Cascade)
   groupJoinRequest GroupJoinRequest[]
   notice           Notice[]
   facility         Facility[]         @relation("FacilityToGroup")
@@ -207,7 +219,7 @@ model GroupPresident {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   group     Group[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model GroupInfo {
@@ -236,8 +248,8 @@ model GroupJoinRequest {
   groupId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  group     Group    @relation(fields: [groupId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, groupId])
 }
@@ -267,7 +279,7 @@ model Tutor {
   board               Board[]
   gallery             Gallery[]
   notice              Notice[]
-  tutorImage          TutorImage?           @relation(fields: [tutorImageId], references: [id])
+  tutorImage          TutorImage?           @relation(fields: [tutorImageId], references: [id], onDelete: Cascade)
   tutorInquiry        TutorInquiry[]
   TutorInquiryComment TutorInquiryComment[]
   tutorSportsEvent    TutorSportsEvent[]
@@ -276,7 +288,7 @@ model Tutor {
   tutorInfo           TutorInfo[]           @relation("TutorToTutorInfo")
   tutorTag            TutorTag[]            @relation("TutorToTutorTag")
   user                User[]                @relation("TutorToUser")
-  tutorPresident      TutorPresident?       @relation(fields: [tutorPresidentId], references: [id])
+  tutorPresident      TutorPresident?       @relation(fields: [tutorPresidentId], references: [id], onDelete: Cascade)
   tutorPresidentId    Int?
 }
 
@@ -286,7 +298,7 @@ model TutorPresident {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tutor     Tutor[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TutorSportsEvent {
@@ -295,7 +307,7 @@ model TutorSportsEvent {
   tutorId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tutor     Tutor    @relation(fields: [tutorId], references: [id])
+  tutor     Tutor    @relation(fields: [tutorId], references: [id], onDelete: Cascade)
 }
 
 model TutorInquiry {
@@ -307,8 +319,8 @@ model TutorInquiry {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   inquiryResponse     Boolean?              @default(false)
-  tutor               Tutor                 @relation(fields: [tutorId], references: [id])
-  user                User?                 @relation(fields: [userId], references: [id])
+  tutor               Tutor                 @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  user                User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   tutorInquiryComment TutorInquiryComment[]
 }
 
@@ -322,9 +334,9 @@ model TutorInquiryComment {
   responseDiscription String
   responseTitle       String
   tutorInquiryId      Int
-  tutor               Tutor        @relation(fields: [tutorId], references: [id])
-  tutorInquiry        TutorInquiry @relation(fields: [tutorInquiryId], references: [id])
-  user                User         @relation(fields: [userId], references: [id])
+  tutor               Tutor        @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorInquiry        TutorInquiry @relation(fields: [tutorInquiryId], references: [id], onDelete: Cascade)
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TutorImage {
@@ -358,7 +370,7 @@ model TutorTag {
 model RequestAddTutor {
   id          Int      @id @default(autoincrement())
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   discription String
   createdAt   DateTime @default(now())
@@ -432,7 +444,7 @@ model FacilitySports {
 model RequestAddFacility {
   id          Int      @id @default(autoincrement())
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   discription String
   createdAt   DateTime @default(now())
@@ -450,9 +462,9 @@ model Board {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   hits         Int            @default(0)
-  group        Group?         @relation(fields: [groupId], references: [id])
-  tutor        Tutor?         @relation(fields: [tutorId], references: [id])
-  user         User           @relation(fields: [userId], references: [id])
+  group        Group?         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  tutor        Tutor?         @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   boardComment BoardComment[]
   boardLike    BoardLike[]
   Report       Report[]
@@ -466,8 +478,8 @@ model BoardComment {
   updatedAt      DateTime         @updatedAt
   payload        String
   delYn          Boolean          @default(false)
-  board          Board            @relation(fields: [boardId], references: [id])
-  user           User             @relation(fields: [userId], references: [id])
+  board          Board            @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   boardReComment BoardReComment[]
 }
 
@@ -479,8 +491,8 @@ model BoardReComment {
   delYn          Boolean      @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  boardComment   BoardComment @relation(fields: [boardCommentId], references: [id])
-  user           User         @relation(fields: [userId], references: [id])
+  boardComment   BoardComment @relation(fields: [boardCommentId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BoardLike {
@@ -489,8 +501,8 @@ model BoardLike {
   boardId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  board     Board    @relation(fields: [boardId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([boardId, userId])
 }
@@ -506,9 +518,9 @@ model Notice {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   hits          Int             @default(0)
-  group         Group?          @relation(fields: [groupId], references: [id])
-  tutor         Tutor?          @relation(fields: [tutorId], references: [id])
-  user          User            @relation(fields: [userId], references: [id])
+  group         Group?          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  tutor         Tutor?          @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   noticeComment NoticeComment[]
   noticeLike    NoticeLike[]
   Report        Report[]
@@ -521,8 +533,8 @@ model NoticeComment {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   payload         String
-  notice          Notice            @relation(fields: [noticeId], references: [id])
-  user            User              @relation(fields: [userId], references: [id])
+  notice          Notice            @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   NoticeReComment NoticeReComment[]
 }
 
@@ -534,8 +546,8 @@ model NoticeReComment {
   delYn           Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  noticeComment   NoticeComment @relation(fields: [noticeCommentId], references: [id])
-  user            User          @relation(fields: [userId], references: [id])
+  noticeComment   NoticeComment @relation(fields: [noticeCommentId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model NoticeLike {
@@ -544,8 +556,8 @@ model NoticeLike {
   noticeId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  notice    Notice   @relation(fields: [noticeId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  notice    Notice   @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([noticeId, userId])
 }
@@ -560,9 +572,9 @@ model Gallery {
   sortation    String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  group        Group?         @relation(fields: [groupId], references: [id])
-  tutor        Tutor?         @relation(fields: [tutorId], references: [id])
-  user         User           @relation(fields: [userId], references: [id])
+  group        Group?         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  tutor        Tutor?         @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   galleryImage GalleryImage[]
 }
 
@@ -572,7 +584,7 @@ model GalleryImage {
   galleryId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  gallery   Gallery  @relation(fields: [galleryId], references: [id])
+  gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
 }
 
 model SportsEvent {
@@ -651,19 +663,19 @@ model BannerDiscImagePath {
   imagePath String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Banner    Banner?  @relation(fields: [bannerId], references: [id])
+  Banner    Banner?  @relation(fields: [bannerId], references: [id], onDelete: Cascade)
 }
 
 model Report {
   id                Int      @id @default(autoincrement())
   userId            Int
-  user              User     @relation(fields: [userId], references: [id])
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   photoId           Int?
-  photo             Photo?   @relation(fields: [photoId], references: [id])
+  photo             Photo?   @relation(fields: [photoId], references: [id], onDelete: Cascade)
   boardId           Int?
-  board             Board?   @relation(fields: [boardId], references: [id])
+  board             Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   noticeId          Int?
-  notice            Notice?  @relation(fields: [noticeId], references: [id])
+  notice            Notice?  @relation(fields: [noticeId], references: [id], onDelete: Cascade)
   reportDiscription String
   reportSortation   String
   createdAt         DateTime @default(now())
@@ -673,7 +685,7 @@ model Report {
 model BugReport {
   id                Int              @id @default(autoincrement())
   userId            Int
-  user              User             @relation(fields: [userId], references: [id])
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   reportTitle       String
   reportDiscription String
   bugReportImage    BugReportImage[]
@@ -683,7 +695,7 @@ model BugReport {
 
 model BugReportImage {
   id          Int        @id @default(autoincrement())
-  bugReport   BugReport? @relation(fields: [bugReportId], references: [id])
+  bugReport   BugReport? @relation(fields: [bugReportId], references: [id], onDelete: Cascade)
   bugReportId Int?
   imagePath   String
   createdAt   DateTime   @default(now())

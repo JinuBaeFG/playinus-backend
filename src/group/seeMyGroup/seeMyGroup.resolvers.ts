@@ -1,3 +1,4 @@
+import { blockGroupList } from "../../photos/photo.utils";
 import { protectedResolver } from "../../users/users.utils";
 
 const seeMyGroupResolver = async (

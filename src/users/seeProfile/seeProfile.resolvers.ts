@@ -1,4 +1,4 @@
-import { deCryptFunction } from "../users.utils";
+import { cryptFunction, deCryptFunction } from "../users.utils";
 
 const seeProfileResolver = async (_, { id }, { client }) => {
   const profile = await client.user.findUnique({

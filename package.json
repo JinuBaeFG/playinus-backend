@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/server --ext ts,js --delay 2",
     "migrate": "npx prisma migrate dev --preview-feature",
-    "studio": "npx prisma studio --port 9999",
+    "studio": "npx prisma studio --port 5555",
     "preinstall": "npx npm-force-resolutions",
     "build": "npx tsc",
     "start": "node build/server"
@@ -42,7 +42,6 @@
     "fs-capacitor": "^6.2.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^8.3.6",
-    "graphql-upload": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
     "mime-type": "^4.0.0",
     "morgan": "^1.10.0",

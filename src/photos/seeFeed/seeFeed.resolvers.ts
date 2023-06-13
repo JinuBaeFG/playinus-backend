@@ -1,8 +1,22 @@
+import client from "../../client";
+import { blockUserList } from "../photo.utils";
+
 const seeFeedResolver = async (
   _,
   { offset, sportsEvent, category },
-  { loggedInUser, client }
+  { loggedInUser }
 ) => {
+  let blockUsers = await client.blockUser.findMany({
+    where: {
+      userId: loggedInUser.id,
+    },
+  });
+
+  let NOT;
+  if (blockUsers) {
+    NOT = blockUserList(blockUsers);
+  }
+
   if (
     sportsEvent !== undefined &&
     sportsEvent !== null &&
@@ -15,6 +29,7 @@ const seeFeedResolver = async (
         where: {
           sportsEvent,
           feedCategory: category,
+          NOT,
         },
         orderBy: {
           createdAt: "desc",
@@ -26,6 +41,7 @@ const seeFeedResolver = async (
         skip: offset,
         where: {
           sportsEvent,
+          NOT,
         },
         orderBy: {
           createdAt: "desc",
@@ -39,6 +55,7 @@ const seeFeedResolver = async (
         skip: offset,
         where: {
           feedCategory: category,
+          NOT,
         },
         orderBy: {
           createdAt: "desc",
@@ -48,6 +65,9 @@ const seeFeedResolver = async (
       return await client.photo.findMany({
         take: 2,
         skip: offset,
+        where: {
+          NOT,
+        },
         orderBy: {
           createdAt: "desc",
         },

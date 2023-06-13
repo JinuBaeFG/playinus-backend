@@ -1,4 +1,5 @@
 import client from "../../client";
+import { blockGroupList } from "../../photos/photo.utils";
 import { protectedResolver } from "../../users/users.utils";
 
 const seeGroupsResolver = async (
