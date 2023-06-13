@@ -1,3 +1,4 @@
+import { blockBoardList } from "../../photos/photo.utils";
 import { protectedResolver } from "../../users/users.utils";
 
 const seeBoardsResolvers = async (
@@ -5,6 +6,17 @@ const seeBoardsResolvers = async (
   { id, sortation, offset },
   { loggedInUser, client }
 ) => {
+  let blockUsers = await client.blockUser.findMany({
+    where: {
+      userId: loggedInUser.id,
+    },
+  });
+
+  let NOT;
+  if (blockUsers) {
+    NOT = blockBoardList(blockUsers);
+  }
+
   let sortationWhere;
   if (sortation === "group") {
     sortationWhere = { groupId: id, sortation };

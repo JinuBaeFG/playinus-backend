@@ -57,5 +57,16 @@ export default {
         },
       });
     },
+    blockedBy: ({ id }) => {
+      return client.blockUser.findMany({
+        where: {
+          userId: id,
+        },
+        include: {
+          user: true,
+          blockedBy: true,
+        },
+      });
+    },
   },
 };

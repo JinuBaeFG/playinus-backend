@@ -10,6 +10,7 @@ export default {
         include: {
           tutor: true,
           group: true,
+          blockUser: true,
         },
       })
     ),
