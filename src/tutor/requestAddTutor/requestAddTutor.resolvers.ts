@@ -14,7 +14,7 @@ const requestAddTutorResolvers = async (
       discription,
     },
   });
-  console.log(tutor);
+
   if (tutor) {
     return {
       ok: true,

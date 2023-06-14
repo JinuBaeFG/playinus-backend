@@ -5,7 +5,6 @@ const createBannerResolvers = async (
   { title, discription, sortation, titleBannerImage },
   { client }
 ) => {
-  console.log(titleBannerImage);
   let bannerImagePath = await uploadToLocals(titleBannerImage, sortation);
 
   const result = await client.banner.create({

@@ -3,7 +3,6 @@ const seeFacilitiesResolvers = async (
   { offset, sportsEvent, maxX, maxY, minX, minY },
   { client }
 ) => {
-  console.log(maxX, maxY, minX, minY);
   if (
     sportsEvent !== undefined &&
     sportsEvent !== null &&

@@ -5,7 +5,6 @@ const joinAccessResolver = async (
   { id, userId, groupId, username },
   { client }
 ) => {
-  console.log(userId, groupId);
   await client.group.update({
     where: {
       id: groupId,

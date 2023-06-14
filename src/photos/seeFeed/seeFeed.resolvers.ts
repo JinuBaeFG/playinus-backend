@@ -6,11 +6,14 @@ const seeFeedResolver = async (
   { offset, sportsEvent, category },
   { loggedInUser }
 ) => {
-  let blockUsers = await client.blockUser.findMany({
-    where: {
-      userId: loggedInUser.id,
-    },
-  });
+  let blockUsers;
+  if (loggedInUser !== null) {
+    blockUsers = await client.blockUser.findMany({
+      where: {
+        userId: loggedInUser.id,
+      },
+    });
+  }
 
   let NOT;
   if (blockUsers) {

@@ -1,13 +1,12 @@
 import client from "../../client";
 
 const checkEmailResolvers = async (_, { email }) => {
-  console.log(email);
   const check = await client.user.findUnique({
     where: {
       email,
     },
   });
-  console.log(check);
+
   if (check !== null) {
     return {
       ok: false,

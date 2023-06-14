@@ -9,7 +9,7 @@ const deleteCommentResolver = async (_, { id }, { loggedInUser, client }) => {
       userId: true,
     },
   });
-  console.log(comment.userId, loggedInUser.id);
+
   if (!comment) {
     return {
       ok: false,
