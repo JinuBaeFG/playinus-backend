@@ -10,7 +10,7 @@ const seeJoinResolver = async (_, { groupId }, { client }) => {
       group: true,
     },
   });
-  console.log(joinRequest);
+
   return joinRequest;
 };
 
