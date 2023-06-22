@@ -9,7 +9,7 @@ const seeTutorsResolvers = async (
     sportsEvent !== "모든 종목"
   ) {
     return await client.tutor.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       where: {
         tutorSportsEvent: {
@@ -25,7 +25,7 @@ const seeTutorsResolvers = async (
     });
   } else {
     return await client.tutor.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       where: {
         access: true,

@@ -13,7 +13,7 @@ const seeGroupsResolver = async (
     sportsEvent !== "모든 종목"
   ) {
     return await client.group.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       where: {
         sportsEvent,
@@ -24,7 +24,7 @@ const seeGroupsResolver = async (
     });
   } else {
     return await client.group.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       orderBy: {
         createdAt: "desc",

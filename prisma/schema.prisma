@@ -81,6 +81,7 @@ model User {
   requestAddFacility  RequestAddFacility[]
   blockUser           BlockUser[]           @relation("BlockUsers")
   blockedBy           BlockUser[]           @relation("BlockedBy")
+  ContestUser         ContestUser[]
 }
 
 model BlockUser {
@@ -700,4 +701,78 @@ model BugReportImage {
   imagePath   String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+}
+
+model Contest {
+  id                   Int             @id @default(autoincrement())
+  contestId            String          @unique
+  contestName          String?
+  contestStartDate     String
+  contestEndDate       String
+  contestRecruitStart  String
+  contestRecruitEnd    String
+  contestPlace         String?
+  buildingNumber       String?
+  dongEubMyunName      String?
+  gusiName             String?
+  riName               String?
+  roadName             String?
+  sidoName             String?
+  zipcode              String?
+  areaLatitude         String?
+  areaLongitude        String?
+  contestPlaceAddress  String?
+  contestStadium       String?
+  contestHost          String?
+  contestSponsorShip   String?
+  contestSports        String
+  contestSportsDetail  String?
+  contestDiscription   String?
+  contestTerms         String?
+  contestEntryFee      String?
+  contestStatus        String          @default("모집")
+  contestPaymentMethod String?
+  contestBanner        String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  contestUser          ContestUser[]
+  contestNotice        ContestNotice[]
+  contestReport        ContestReport[]
+}
+
+model ContestUser {
+  id                   Int      @id @default(autoincrement())
+  contestId            String
+  contest              Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  userId               Int
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamName             String
+  userAge              Int
+  userGender           String
+  userTier             String
+  contestSports        String
+  contestPaymentStatus String   @default("결제진행")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model ContestNotice {
+  id                Int      @id @default(autoincrement())
+  contestId         String
+  contest           Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  noticeTitle       String?
+  noticeDiscription String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model ContestReport {
+  id                Int      @id @default(autoincrement())
+  contestId         String
+  contest           Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  reportType        String?
+  reportTitle       String?
+  reportDiscription String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
