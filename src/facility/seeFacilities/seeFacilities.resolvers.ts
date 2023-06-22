@@ -9,7 +9,7 @@ const seeFacilitiesResolvers = async (
     sportsEvent !== "모든 종목"
   ) {
     return await client.facility.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       where: {
         facilitySports: {
@@ -24,7 +24,7 @@ const seeFacilitiesResolvers = async (
     });
   } else {
     return await client.facility.findMany({
-      take: 5,
+      take: 3,
       skip: offset,
       orderBy: {
         createdAt: "desc",
