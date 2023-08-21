@@ -3,13 +3,13 @@ import { gql } from "apollo-server-express";
 export default gql`
   type Mutation {
     editContest(
+      id: String
       contestId: String
       contestName: String
       contestStartDate: String
       contestEndDate: String
       contestRecruitStart: String
       contestRecruitEnd: String
-      contestPlace: String
       buildingNumber: String
       dongEubMyunName: String
       gusiName: String
@@ -21,11 +21,19 @@ export default gql`
       areaLongitude: String
       contestPlaceAddress: String
       contestStadium: String
+      contestHost: String
+      contestSponsorShip: String
       contestSports: String
       contestSportsDetail: String
       contestDiscription: String
       contestTerms: String
+      contestAwardDetails: String
       contestEntryFee: String
+      address: String
+      addrRoad: String
+      activeArea: String
+      contestRecruitNumber: Int
+      contestBanner: Upload
     ): MutationResponse
   }
 `;

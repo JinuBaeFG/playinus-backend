@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type User {
-    id: Int!
+    id: String!
     username: String!
     email: String!
     createdAt: String!
@@ -38,7 +38,7 @@ export default gql`
   }
 
   type BlockUser {
-    id: Int
+    id: String
     user: User
     blockedBy: User
     createdAt: String

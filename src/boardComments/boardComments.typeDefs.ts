@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type BoardComment {
-    id: Int!
+    id: String!
     user: User!
     board: Board!
     payload: String!

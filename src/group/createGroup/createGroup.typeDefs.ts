@@ -33,7 +33,7 @@ export default gql`
   }
 
   input GroupTagInput {
-    id: Int
+    id: String
     name: String
   }
 `;

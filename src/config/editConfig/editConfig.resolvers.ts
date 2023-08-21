@@ -1,6 +1,6 @@
 const editConfigResolvers = async (
   _,
-  { id, privacyTerms, gpsTerms, useTerms },
+  { id, privacyTerms, gpsTerms, useTerms, businessInfo },
   { client }
 ) => {
   try {
@@ -9,6 +9,7 @@ const editConfigResolvers = async (
         privacyTerms,
         gpsTerms,
         useTerms,
+        businessInfo,
       },
       where: {
         id,

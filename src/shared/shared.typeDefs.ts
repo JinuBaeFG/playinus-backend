@@ -8,14 +8,14 @@ export default gql`
   }
 
   type Tag {
-    id: Int
+    id: String
     name: String
     createdAt: String!
     updatedAt: String!
   }
 
   type SportsEvent {
-    id: Int
+    id: String
     name: String
     imagePath: String
     createdAt: String!
@@ -23,7 +23,7 @@ export default gql`
   }
 
   type Notice {
-    id: Int
+    id: String
     userId: User
     groupId: Group
     tutorId: Tutor
@@ -35,7 +35,7 @@ export default gql`
   }
 
   type Gallery {
-    id: Int
+    id: String
     userId: User
     groupId: Group
     tutorId: Tutor
@@ -48,9 +48,9 @@ export default gql`
   }
 
   type GalleryImage {
-    id: Int
+    id: String
     imagePath: String
-    galleryId: Int
+    galleryId: String
     createdAt: String!
     updatedAt: String!
   }

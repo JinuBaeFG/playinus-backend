@@ -1,6 +1,6 @@
 import client from "../../client";
 
-const seeContestsResolvers = async (_, __, ___) => {
+const seeContestsResolvers = async (_, { offset }, ___) => {
   return await client.contest.findMany({});
 };
 

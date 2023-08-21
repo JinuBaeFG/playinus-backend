@@ -8,6 +8,6 @@ export default gql`
   }
 
   type Query {
-    searchUsers(keyword: String!, lastId: Int): SeaerchUsersResult!
+    searchUsers(keyword: String!, lastId: String): SeaerchUsersResult!
   }
 `;

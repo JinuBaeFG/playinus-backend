@@ -19,26 +19,45 @@ export default {
       { client }
     ) => {
       try {
-        const existingUser = await client.user.findFirst({
+        const uglyPhoneNumber = cryptFunction(phoneNumber);
+        const existingUser = await client.user.findUnique({
           where: {
-            OR: [
-              {
-                email,
-              },
-              {
-                phoneNumber,
-              },
-            ],
+            phoneNumber: uglyPhoneNumber,
           },
         });
-        if (existingUser) {
-          return {
-            ok: false,
-            error: "해당 이메일 또는 휴대전화번호는 이미 사용중 입니다.",
-          };
+
+        if (existingUser !== null) {
+          if (existingUser.naverConnect) {
+            const token = await jwt.sign(
+              { id: existingUser.id },
+              process.env.SECRET_KEY
+            );
+            return {
+              ok: true,
+              error: token,
+            };
+          } else {
+            const updateUser = await client.user.update({
+              where: {
+                phoneNumber: uglyPhoneNumber,
+              },
+              data: {
+                naverConnect: true,
+                naverID: uid,
+              },
+            });
+
+            const token = await jwt.sign(
+              { id: updateUser.id },
+              process.env.SECRET_KEY
+            );
+            return {
+              ok: true,
+              error: token,
+            };
+          }
         }
         const uglyPassword = await bcrypt.hash(password, 10);
-        const uglyPhoneNumber = cryptFunction(phoneNumber);
 
         const newUser = await client.user.create({
           data: {
@@ -73,6 +92,7 @@ export default {
           };
         }
       } catch (e) {
+        console.log(e);
         return {
           ok: false,
           error: "회원가입 중 오류가 발생하였습니다.",

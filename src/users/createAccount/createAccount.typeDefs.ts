@@ -4,6 +4,8 @@ export default gql`
   type CreateAccountResult {
     ok: Boolean!
     error: String
+    token: String
+    interlock: String
   }
   type Mutation {
     createAccount(

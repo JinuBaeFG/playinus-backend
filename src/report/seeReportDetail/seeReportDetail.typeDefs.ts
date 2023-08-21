@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Query {
-    seeReportDetail(id: Int): Report
+    seeReportDetail(id: String): Report
   }
 `;

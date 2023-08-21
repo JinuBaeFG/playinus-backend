@@ -34,14 +34,14 @@ export default gql`
   }
 
   input FacilitySportsInput {
-    id: Int
+    id: String
     name: String
     imagePath: String
     isChecked: Boolean
   }
 
   input FacilityTagInput {
-    id: Int
+    id: String
     name: String
     imagePath: String
     isUse: Boolean

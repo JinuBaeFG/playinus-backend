@@ -122,7 +122,7 @@ app.get("/api/certified", (req, res) => {
       type: "SMS",
       contryCode: "82",
       from: `${process.env.NAVER_SMS_PHONE_NUMBER}`,
-      content: `플레이인어스 - 인증번호 : [${crtNumber}]`,
+      content: `체육마을 - 인증번호 : [${crtNumber}]`,
       messages: [
         {
           to: `${phNumber}`,
@@ -131,7 +131,6 @@ app.get("/api/certified", (req, res) => {
     },
   })
     .then((response) => {
-      console.log(response.data);
       res.header("Access-Control-Allow-Origin", "*");
       res.status(200).json({ crtNumber: crtNumber });
     })
@@ -158,6 +157,56 @@ app.get("/api/navermaps", (req, res) => {
     .catch((error) => {
       console.log("error", error.response.data);
     });
+});
+
+app.post("/payments/cancel", async (req, res, next) => {
+  try {
+    let access_token;
+    /* 액세스 토큰(access token) 발급 */
+    axios({
+      url: "https://api.iamport.kr/users/getToken",
+      // POST method
+      method: "post",
+      // "Content-Type": "application/json"
+      headers: { "Content-Type": "application/json" },
+      data: {
+        // REST API키
+        imp_key: process.env.IAMPORT_CODE,
+        // REST API Secret
+        imp_secret: process.env.IAMPORT_REST_API_SECRET_KEY,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        access_token = response.data.access_token;
+      })
+      .catch((error) => {
+        console.log("error", error.response.data);
+      });
+    /* 결제정보 조회 */
+    const { body } = req;
+    // 클라이언트로부터 전달받은 주문번호, 환불사유, 환불금액
+    const { merchant_uid, reason, cancel_request_amount } = body;
+
+    await axios({
+      url: "https://api.iamport.kr/payments/cancel",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: access_token, // 포트원 서버로부터 발급받은 엑세스 토큰
+      },
+      data: {
+        reason, // 가맹점 클라이언트로부터 받은 환불사유
+        merchant_uid, // imp_uid를 환불 `unique key`로 입력
+        amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
+      },
+    }).then((response) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.status(200).json(response.data);
+    });
+  } catch (error) {
+    res.status(400).send(error);
+  }
 });
 
 app.use(

@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 export default gql`
   type Mutation {
     createBoardReComment(
-      boardCommentId: Int!
+      boardCommentId: String!
       payload: String!
     ): MutationResponse!
   }

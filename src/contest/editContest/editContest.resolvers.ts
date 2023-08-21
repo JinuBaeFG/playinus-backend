@@ -1,8 +1,10 @@
 import client from "../../client";
+import { uploadToLocals } from "../../shared/shared.util";
 
 const editContesttResolvers = async (
   _,
   {
+    id,
     contestId,
     contestName,
     contestStartDate,
@@ -25,11 +27,20 @@ const editContesttResolvers = async (
     contestSportsDetail,
     contestDiscription,
     contestTerms,
+    contestAwardDetails,
     contestEntryFee,
+    contestBanner,
+    contestRecruitNumber,
   }
 ) => {
-  await client.contest.update({
+  let imagePath = [];
+  if (contestBanner !== null && contestBanner !== undefined) {
+    imagePath = await uploadToLocals(contestBanner, "Contest");
+  }
+
+  const update = await client.contest.update({
     where: {
+      id,
       contestId,
     },
     data: {
@@ -54,7 +65,13 @@ const editContesttResolvers = async (
       contestSportsDetail,
       contestDiscription,
       contestTerms,
+      contestAwardDetails,
       contestEntryFee,
+      contestRecruitNumber,
+      ...(contestBanner !== null &&
+        contestBanner !== undefined && {
+          contestBanner: imagePath[0],
+        }),
     },
   });
 

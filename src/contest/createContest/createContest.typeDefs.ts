@@ -25,10 +25,12 @@ export default gql`
       contestSportsDetail: String
       contestDiscription: String
       contestTerms: String
+      contestAwardDetails: String
       contestEntryFee: String
       address: String
       addrRoad: String
       activeArea: String
+      contestRecruitNumber: Int
       contestBanner: Upload
     ): MutationResponse
   }

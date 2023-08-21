@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "ContestGroupMatchResult" ALTER COLUMN "totalWin" DROP NOT NULL,
+ALTER COLUMN "totalLose" DROP NOT NULL,
+ALTER COLUMN "totalWinScore" DROP NOT NULL,
+ALTER COLUMN "totalLoseScore" DROP NOT NULL,
+ALTER COLUMN "totalScore" DROP NOT NULL;

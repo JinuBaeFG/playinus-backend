@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Tutor {
-    id: Int
+    id: String
     user: User
     name: String
     discription: String
@@ -36,7 +36,7 @@ export default gql`
   }
 
   type RequestAddTutor {
-    id: Int!
+    id: String!
     user: User
     title: String
     discription: String
@@ -45,7 +45,7 @@ export default gql`
   }
 
   type TutorSportsEvent {
-    id: Int!
+    id: String!
     name: String
     tutorId: Tutor
     createdAt: String!
@@ -53,7 +53,7 @@ export default gql`
   }
 
   type TutorImage {
-    id: Int!
+    id: String!
     imagePath: String
     tutorId: Tutor
     createdAt: String!
@@ -61,7 +61,7 @@ export default gql`
   }
 
   type TutorInfo {
-    id: Int!
+    id: String!
     tutor: Tutor
     discription: String
     awardDate: String
@@ -70,7 +70,7 @@ export default gql`
   }
 
   type TutorTag {
-    id: Int!
+    id: String!
     name: String
     imagePath: String
     tutor: [Tutor]
@@ -79,7 +79,7 @@ export default gql`
   }
 
   type TutorInquiry {
-    id: Int!
+    id: String!
     tutor: Tutor
     user: User
     inquiryTitle: String
@@ -91,7 +91,7 @@ export default gql`
   }
 
   type TutorInquiryComment {
-    id: Int!
+    id: String!
     user: User
     tutor: Tutor
     tutorInquiry: TutorInquiry
@@ -103,7 +103,7 @@ export default gql`
   }
 
   type TutorPresident {
-    id: Int!
+    id: String!
     user: User!
     createdAt: String!
     updatedAt: String!

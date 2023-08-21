@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Tutor" ADD COLUMN     "maxMember" INTEGER NOT NULL DEFAULT 0;
