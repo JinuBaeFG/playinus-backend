@@ -4,20 +4,21 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("OPER_DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Config {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   privacyTerms String?
   gpsTerms     String?
   useTerms     String?
+  businessInfo String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model AdminNotice {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   title       String
   discription String
   createdAt   DateTime @default(now())
@@ -25,15 +26,25 @@ model AdminNotice {
 }
 
 model AdminFaq {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   title       String
   discription String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model AdminUser {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  password    String
+  email       String?  @unique
+  phoneNumber String?  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model User {
-  id                  Int                   @id @default(autoincrement())
+  id                  String                @id @default(uuid())
   username            String
   email               String                @unique
   password            String
@@ -81,22 +92,23 @@ model User {
   requestAddFacility  RequestAddFacility[]
   blockUser           BlockUser[]           @relation("BlockUsers")
   blockedBy           BlockUser[]           @relation("BlockedBy")
-  ContestUser         ContestUser[]
+  contestUser         ContestUser[]
+  contestReport       ContestReport[]
 }
 
 model BlockUser {
-  id          Int      @id @default(autoincrement())
-  userId      Int
+  id          String   @id @default(uuid())
+  userId      String
   user        User     @relation("BlockUsers", fields: [userId], references: [id], onDelete: Cascade)
-  blockedById Int?     @unique
+  blockedById String?  @unique
   blockedBy   User?    @relation("BlockedBy", fields: [blockedById], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Photo {
-  id           Int          @id @default(autoincrement())
-  userId       Int
+  id           String       @id @default(uuid())
+  userId       String
   caption      String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -112,7 +124,7 @@ model Photo {
 }
 
 model FeedCategoryList {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -120,7 +132,7 @@ model FeedCategoryList {
 }
 
 model FeedUpload {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   imagePath String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,7 +140,7 @@ model FeedUpload {
 }
 
 model Hashtag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   hashtag   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,9 +148,9 @@ model Hashtag {
 }
 
 model Like {
-  id        Int      @id @default(autoincrement())
-  photoId   Int
-  userId    Int
+  id        String   @id @default(uuid())
+  photoId   String
+  userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   photo     Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
@@ -148,10 +160,10 @@ model Like {
 }
 
 model Comment {
-  id        Int         @id @default(autoincrement())
+  id        String      @id @default(uuid())
   payload   String
-  userId    Int
-  photoId   Int
+  userId    String
+  photoId   String
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   photo     Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
@@ -160,9 +172,9 @@ model Comment {
 }
 
 model ReComment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  commentId Int
+  id        String   @id @default(uuid())
+  userId    String
+  commentId String
   payload   String
   delYn     Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -172,16 +184,16 @@ model ReComment {
 }
 
 model Group {
-  id               Int                @id @default(autoincrement())
-  name             String             @unique
+  id               String         @id @default(uuid())
+  name             String         @unique
   discription      String?
   activeArea       String?
   address          String?
   addrRoad         String?
   areaLatitude     String?
   areaLongitude    String?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   sportsEvent      String
   buildingNumber   String?
   dongEubMyunName  String?
@@ -190,13 +202,14 @@ model Group {
   roadName         String?
   sidoName         String?
   zipcode          String?
-  groupPresidentId Int
+  groupPresidentId String
+  groupPresident   GroupPresident @relation(fields: [groupPresidentId], references: [id], onDelete: Cascade)
   maxMember        String
-  groupImageId     Int?
+  groupImageId     String?
+  groupImage       GroupImage?    @relation(fields: [groupImageId], references: [id], onDelete: Cascade)
   board            Board[]
   gallery          Gallery[]
-  groupImage       GroupImage?        @relation(fields: [groupImageId], references: [id], onDelete: Cascade)
-  groupPresident   GroupPresident     @relation(fields: [groupPresidentId], references: [id], onDelete: Cascade)
+
   groupJoinRequest GroupJoinRequest[]
   notice           Notice[]
   facility         Facility[]         @relation("FacilityToGroup")
@@ -207,7 +220,7 @@ model Group {
 }
 
 model GroupImage {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   imagePath String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -215,8 +228,8 @@ model GroupImage {
 }
 
 model GroupPresident {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
+  id        String   @id @default(uuid())
+  userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   group     Group[]
@@ -224,7 +237,7 @@ model GroupPresident {
 }
 
 model GroupInfo {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   discription String
   awardDate   String
   createdAt   DateTime @default(now())
@@ -235,7 +248,7 @@ model GroupInfo {
 }
 
 model GroupTag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -244,9 +257,9 @@ model GroupTag {
 }
 
 model GroupJoinRequest {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  groupId   Int
+  id        String   @id @default(uuid())
+  userId    String
+  groupId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
@@ -256,7 +269,7 @@ model GroupJoinRequest {
 }
 
 model Tutor {
-  id                  Int                   @id @default(autoincrement())
+  id                  String                @id @default(uuid())
   name                String
   activeArea          String?
   address             String?
@@ -273,14 +286,14 @@ model Tutor {
   roadName            String?
   sidoName            String?
   zipcode             String?
-  tutorImageId        Int?
+  tutorImageId        String?
+  tutorImage          TutorImage?           @relation(fields: [tutorImageId], references: [id], onDelete: Cascade)
   discription         String?
   access              Boolean               @default(false)
   maxMember           Int                   @default(0)
   board               Board[]
   gallery             Gallery[]
   notice              Notice[]
-  tutorImage          TutorImage?           @relation(fields: [tutorImageId], references: [id], onDelete: Cascade)
   tutorInquiry        TutorInquiry[]
   TutorInquiryComment TutorInquiryComment[]
   tutorSportsEvent    TutorSportsEvent[]
@@ -290,12 +303,12 @@ model Tutor {
   tutorTag            TutorTag[]            @relation("TutorToTutorTag")
   user                User[]                @relation("TutorToUser")
   tutorPresident      TutorPresident?       @relation(fields: [tutorPresidentId], references: [id], onDelete: Cascade)
-  tutorPresidentId    Int?
+  tutorPresidentId    String?
 }
 
 model TutorPresident {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
+  id        String   @id @default(uuid())
+  userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tutor     Tutor[]
@@ -303,18 +316,18 @@ model TutorPresident {
 }
 
 model TutorSportsEvent {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
-  tutorId   Int
+  tutorId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tutor     Tutor    @relation(fields: [tutorId], references: [id], onDelete: Cascade)
 }
 
 model TutorInquiry {
-  id                  Int                   @id @default(autoincrement())
-  tutorId             Int
-  userId              Int?
+  id                  String                @id @default(uuid())
+  tutorId             String
+  userId              String?
   inquiryTitle        String
   inquiryDiscription  String
   createdAt           DateTime              @default(now())
@@ -326,22 +339,22 @@ model TutorInquiry {
 }
 
 model TutorInquiryComment {
-  id                  Int          @id @default(autoincrement())
-  userId              Int
-  tutorId             Int
+  id                  String       @id @default(uuid())
+  userId              String
+  tutorId             String
   answerOk            Boolean?     @default(false)
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
   responseDiscription String
   responseTitle       String
-  tutorInquiryId      Int
+  tutorInquiryId      String
   tutor               Tutor        @relation(fields: [tutorId], references: [id], onDelete: Cascade)
   tutorInquiry        TutorInquiry @relation(fields: [tutorInquiryId], references: [id], onDelete: Cascade)
   user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TutorImage {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   imagePath String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -349,7 +362,7 @@ model TutorImage {
 }
 
 model TutorInfo {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   discription String
   awardDate   String
   createdAt   DateTime @default(now())
@@ -360,7 +373,7 @@ model TutorInfo {
 }
 
 model TutorTag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String   @unique
   imagePath String?
   createdAt DateTime @default(now())
@@ -369,8 +382,8 @@ model TutorTag {
 }
 
 model RequestAddTutor {
-  id          Int      @id @default(autoincrement())
-  userId      Int
+  id          String   @id @default(uuid())
+  userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   discription String
@@ -379,7 +392,7 @@ model RequestAddTutor {
 }
 
 model Facility {
-  id              Int              @id @default(autoincrement())
+  id              String           @id @default(uuid())
   name            String           @unique
   activeArea      String
   address         String
@@ -407,7 +420,7 @@ model Facility {
 }
 
 model FacilityImage {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(uuid())
   imagePath String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -415,7 +428,7 @@ model FacilityImage {
 }
 
 model FacilityInfo {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(uuid())
   discription String
   awardDate   String
   createdAt   DateTime   @default(now())
@@ -426,7 +439,7 @@ model FacilityInfo {
 }
 
 model FacilityTag {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(uuid())
   name      String     @unique
   imagePath String?
   createdAt DateTime   @default(now())
@@ -435,7 +448,7 @@ model FacilityTag {
 }
 
 model FacilitySports {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(uuid())
   name      String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -443,8 +456,8 @@ model FacilitySports {
 }
 
 model RequestAddFacility {
-  id          Int      @id @default(autoincrement())
-  userId      Int
+  id          String   @id @default(uuid())
+  userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   discription String
@@ -453,10 +466,10 @@ model RequestAddFacility {
 }
 
 model Board {
-  id           Int            @id @default(autoincrement())
-  userId       Int
-  groupId      Int?
-  tutorId      Int?
+  id           String         @id @default(uuid())
+  userId       String
+  groupId      String?
+  tutorId      String?
   title        String
   discription  String
   sortation    String
@@ -472,9 +485,9 @@ model Board {
 }
 
 model BoardComment {
-  id             Int              @id @default(autoincrement())
-  userId         Int
-  boardId        Int
+  id             String           @id @default(uuid())
+  userId         String
+  boardId        String
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   payload        String
@@ -485,9 +498,9 @@ model BoardComment {
 }
 
 model BoardReComment {
-  id             Int          @id @default(autoincrement())
-  userId         Int
-  boardCommentId Int
+  id             String       @id @default(uuid())
+  userId         String
+  boardCommentId String
   payload        String
   delYn          Boolean      @default(false)
   createdAt      DateTime     @default(now())
@@ -497,9 +510,9 @@ model BoardReComment {
 }
 
 model BoardLike {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  boardId   Int
+  id        String   @id @default(uuid())
+  userId    String
+  boardId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
@@ -509,10 +522,10 @@ model BoardLike {
 }
 
 model Notice {
-  id            Int             @id @default(autoincrement())
-  userId        Int
-  groupId       Int?
-  tutorId       Int?
+  id            String          @id @default(uuid())
+  userId        String
+  groupId       String?
+  tutorId       String?
   title         String
   discription   String
   sortation     String
@@ -528,9 +541,9 @@ model Notice {
 }
 
 model NoticeComment {
-  id              Int               @id @default(autoincrement())
-  userId          Int
-  noticeId        Int
+  id              String            @id @default(uuid())
+  userId          String
+  noticeId        String
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   payload         String
@@ -540,9 +553,9 @@ model NoticeComment {
 }
 
 model NoticeReComment {
-  id              Int           @id @default(autoincrement())
-  userId          Int
-  noticeCommentId Int
+  id              String        @id @default(uuid())
+  userId          String
+  noticeCommentId String
   payload         String
   delYn           Boolean       @default(false)
   createdAt       DateTime      @default(now())
@@ -552,9 +565,9 @@ model NoticeReComment {
 }
 
 model NoticeLike {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  noticeId  Int
+  id        String   @id @default(uuid())
+  userId    String
+  noticeId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   notice    Notice   @relation(fields: [noticeId], references: [id], onDelete: Cascade)
@@ -564,10 +577,10 @@ model NoticeLike {
 }
 
 model Gallery {
-  id           Int            @id @default(autoincrement())
-  userId       Int
-  groupId      Int?
-  tutorId      Int?
+  id           String         @id @default(uuid())
+  userId       String
+  groupId      String?
+  tutorId      String?
   title        String
   discription  String
   sortation    String
@@ -580,16 +593,16 @@ model Gallery {
 }
 
 model GalleryImage {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   imagePath String   @unique
-  galleryId Int
+  galleryId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
 }
 
 model SportsEvent {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -597,7 +610,7 @@ model SportsEvent {
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   imagePath String?
   sortation String?
@@ -606,14 +619,14 @@ model Tag {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Room {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   messages  Message[]
@@ -621,10 +634,10 @@ model Room {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   payload   String
-  userId    Int
-  roomId    Int
+  userId    String
+  roomId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   read      Boolean  @default(false)
@@ -633,7 +646,7 @@ model Message {
 }
 
 model Banner {
-  id                  Int                   @id @default(autoincrement())
+  id                  String                @id @default(uuid())
   title               String
   discription         String?
   sidoName            String?
@@ -652,15 +665,15 @@ model Banner {
   sportsEvent         String?
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
-  bannerImagePath     String
+  bannerImagePath     String?
   sortation           String?
   bannerDiscImagePath BannerDiscImagePath[]
   externalLink        String?
 }
 
 model BannerDiscImagePath {
-  id        Int      @id @default(autoincrement())
-  bannerId  Int?
+  id        String   @id @default(uuid())
+  bannerId  String?
   imagePath String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -668,14 +681,14 @@ model BannerDiscImagePath {
 }
 
 model Report {
-  id                Int      @id @default(autoincrement())
-  userId            Int
+  id                String   @id @default(uuid())
+  userId            String
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photoId           Int?
+  photoId           String?
   photo             Photo?   @relation(fields: [photoId], references: [id], onDelete: Cascade)
-  boardId           Int?
+  boardId           String?
   board             Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  noticeId          Int?
+  noticeId          String?
   notice            Notice?  @relation(fields: [noticeId], references: [id], onDelete: Cascade)
   reportDiscription String
   reportSortation   String
@@ -684,8 +697,8 @@ model Report {
 }
 
 model BugReport {
-  id                Int              @id @default(autoincrement())
-  userId            Int
+  id                String           @id @default(uuid())
+  userId            String
   user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   reportTitle       String
   reportDiscription String
@@ -695,71 +708,250 @@ model BugReport {
 }
 
 model BugReportImage {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(uuid())
   bugReport   BugReport? @relation(fields: [bugReportId], references: [id], onDelete: Cascade)
-  bugReportId Int?
+  bugReportId String?
   imagePath   String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
 
+// 대회 관련 테이블
 model Contest {
-  id                   Int             @id @default(autoincrement())
-  contestId            String          @unique
-  contestName          String?
-  contestStartDate     String
-  contestEndDate       String
-  contestRecruitStart  String
-  contestRecruitEnd    String
-  contestPlace         String?
-  buildingNumber       String?
-  dongEubMyunName      String?
-  gusiName             String?
-  riName               String?
-  roadName             String?
-  sidoName             String?
-  zipcode              String?
-  areaLatitude         String?
-  areaLongitude        String?
-  contestPlaceAddress  String?
-  contestStadium       String?
-  contestHost          String?
-  contestSponsorShip   String?
-  contestSports        String
-  contestSportsDetail  String?
-  contestDiscription   String?
-  contestTerms         String?
-  contestEntryFee      String?
-  contestStatus        String          @default("모집")
-  contestPaymentMethod String?
-  contestBanner        String?
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  contestUser          ContestUser[]
-  contestNotice        ContestNotice[]
-  contestReport        ContestReport[]
+  id                       String                     @id @default(uuid())
+  contestId                String                     @unique
+  contestName              String?
+  contestStartDate         String?
+  contestEndDate           String?
+  contestRecruitStart      String?
+  contestRecruitEnd        String?
+  contestPlace             String?
+  buildingNumber           String?
+  dongEubMyunName          String?
+  gusiName                 String?
+  riName                   String?
+  roadName                 String?
+  sidoName                 String?
+  zipcode                  String?
+  areaLatitude             String?
+  areaLongitude            String?
+  contestPlaceAddress      String?
+  contestStadium           String?
+  contestHost              String?
+  contestSponsorShip       String?
+  contestSports            String?
+  contestSportsDetail      String?
+  contestDiscription       String?
+  contestTerms             String?
+  contestAwardDetails      String?
+  contestEntryFee          String?
+  contestStatus            String?                    @default("모집")
+  contestPaymentMethod     String?
+  contestBanner            String?
+  contestRecruitNumber     Int?
+  contestUser              ContestUser[]
+  contestNotice            ContestNotice[]
+  contestReport            ContestReport[]
+  contestTierGroup         ContestTierGroup[]
+  contestMatchGroup        ContestMatchGroup[]
+  contestTournamentGroup   ContestTournamentGroup[]
+  contestGroupMatchHistory ContestGroupMatchHistory[]
+  contestTournamentHistory ContestTournamentHistory[]
+  contestCourt             ContestCourt[]
+  contestTeam              ContestTeam[]
+  contestGroupMatchResult  ContestGroupMatchResult[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
 }
 
 model ContestUser {
-  id                   Int      @id @default(autoincrement())
-  contestId            String
-  contest              Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
-  userId               Int
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  teamName             String
+  id                   String            @id @default(uuid())
+  contestId            String?
+  contest              Contest?          @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  userId               String?
+  user                 User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userAge              Int
   userGender           String
   userTier             String
   contestSports        String
-  contestPaymentStatus String   @default("결제진행")
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  contestSportsType    String
+  contestPaymentId     String            @unique
+  contestPaymentStatus String            @default("결제진행")
+  contestTeamId        String?
+  contestTeam          ContestTeam?      @relation(fields: [contestTeamId], references: [id], onDelete: Cascade)
+  contestTierGroupId   String?
+  contestTierGroup     ContestTierGroup? @relation(fields: [contestTierGroupId], references: [id], onDelete: Cascade)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  @@unique([contestId, userId])
+}
+
+model ContestTeam {
+  id                       String                     @id @default(uuid())
+  teamName                 String
+  contestId                String?
+  contest                  Contest?                   @relation(fields: [contestId], references: [contestId])
+  contestUser              ContestUser[]
+  contestTierGroupId       String?
+  contestTierGroup         ContestTierGroup?          @relation(fields: [contestTierGroupId], references: [id])
+  contestMatchGroupId      String?
+  contestMatchGroup        ContestMatchGroup?         @relation(fields: [contestMatchGroupId], references: [id])
+  contestTournamentGroupId String?
+  contestTournamentGroup   ContestTournamentGroup?    @relation(fields: [contestTournamentGroupId], references: [id])
+  contestTeam              ContestGroupMatchHistory[] @relation("ContestTeam")
+  opponentTeam             ContestGroupMatchHistory[] @relation("OpponentTeam")
+  contestTournamentTeam    ContestTournamentHistory[] @relation("ContestTournamentTeam")
+  opponentTournamentTeam   ContestTournamentHistory[] @relation("OpponentTournamentTeam")
+  contestGroupMatchResult  ContestGroupMatchResult[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+
+  @@unique([teamName, contestId])
+}
+
+model ContestTierGroup {
+  id                       String                     @id @default(uuid())
+  groupName                String
+  roundAdvance             Int?
+  startRound               Int?
+  createMatchYN            Boolean                    @default(false)
+  contestId                String?
+  contest                  Contest?                   @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestUser              ContestUser[]
+  contestTeam              ContestTeam[]
+  contestMatchGroup        ContestMatchGroup[]
+  contestTournamentGroup   ContestTournamentGroup[]
+  contestTournamentHistory ContestTournamentHistory[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+}
+
+model ContestCourt {
+  id                       String                     @id @default(uuid())
+  courtName                String
+  contestId                String?
+  contest                  Contest?                   @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestGroupMatchHistory ContestGroupMatchHistory[]
+  contestTournamentHistory ContestTournamentHistory[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+}
+
+model ContestMatchGroup {
+  id                       String                     @id @default(uuid())
+  groupNo                  Int
+  contestId                String?
+  contest                  Contest?                   @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestTierGroupId       String?
+  contestTierGroup         ContestTierGroup?          @relation(fields: [contestTierGroupId], references: [id], onDelete: Cascade)
+  contestTeam              ContestTeam[]
+  contestGroupMatchHistory ContestGroupMatchHistory[]
+  contestGroupMatchResult  ContestGroupMatchResult[]
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+}
+
+model ContestGroupMatchResult {
+  id                       String                     @id @default(uuid())
+  contestId                String?
+  contest                  Contest?                   @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestMatchGroupId      String?
+  contestMatchGroup        ContestMatchGroup?         @relation(fields: [contestMatchGroupId], references: [id], onDelete: Cascade)
+  contestTeamId            String?
+  contestTeam              ContestTeam?               @relation(fields: [contestTeamId], references: [id])
+  totalWin                 Int?                       @default(0)
+  totalLose                Int?                       @default(0)
+  totalWinScore            Int?                       @default(0)
+  totalLoseScore           Int?                       @default(0)
+  totalScore               Int?                       @default(0)
+  contestGroupMatchHistory ContestGroupMatchHistory[] @relation("ContestGroupMatchRelation")
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+
+  @@unique([contestMatchGroupId, contestTeamId])
+}
+
+model ContestGroupMatchHistory {
+  id                        String                   @id @default(uuid())
+  matchNo                   Int?
+  contestId                 String?
+  contest                   Contest?                 @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestTeamId             String?
+  contestTeam               ContestTeam?             @relation("ContestTeam", fields: [contestTeamId], references: [id])
+  opponentTeamId            String?
+  opponentTeam              ContestTeam?             @relation("OpponentTeam", fields: [opponentTeamId], references: [id])
+  contestMatchGroupId       String?
+  contestMatchGroup         ContestMatchGroup?       @relation(fields: [contestMatchGroupId], references: [id], onDelete: Cascade)
+  contestGroupMatchResultId String?
+  contestGroupMatchResult   ContestGroupMatchResult? @relation("ContestGroupMatchRelation", fields: [contestGroupMatchResultId], references: [id])
+  contestCourtId            String?
+  contestCourt              ContestCourt?            @relation(fields: [contestCourtId], references: [id])
+  matchTime                 String?
+  matchTimeHour             String?
+  matchTimeMin              String?
+  isWinner                  Boolean?
+  resultScore               String?
+  winScore                  Int?
+  loseScore                 Int?
+  status                    String?
+  startTime                 String?
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+
+  @@unique([contestTeamId, opponentTeamId])
+}
+
+model ContestTournamentGroup {
+  id                  String                     @id @default(uuid())
+  matchNo             Int?
+  name                String?
+  nextMatchId         String?
+  tournamentRoundText String?
+  startTime           String?                    @default("")
+  startTimeHour       String?
+  startTimeMin        String?
+  state               String?                    @default("NO_PARTY")
+  contestId           String?
+  contest             Contest?                   @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestTierGroupId  String?
+  contestTierGroup    ContestTierGroup?          @relation(fields: [contestTierGroupId], references: [id], onDelete: Cascade)
+  contestTeam         ContestTeam[]
+  participants        ContestTournamentHistory[]
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+}
+
+model ContestTournamentHistory {
+  id                       String                 @id @default(uuid())
+  contestId                String?
+  contest                  Contest?               @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  contestTierGroupId       String?
+  contestTierGroup         ContestTierGroup?      @relation(fields: [contestTierGroupId], references: [id], onDelete: Cascade)
+  contestTournamentGroupId String
+  contestTournamentGroup   ContestTournamentGroup @relation(fields: [contestTournamentGroupId], references: [id], onDelete: Cascade)
+  name                     String?                @default("TBD")
+  contestTeamId            String?
+  contestTeam              ContestTeam?           @relation("ContestTournamentTeam", fields: [contestTeamId], references: [id], onDelete: Cascade)
+  opponentTeamId           String?
+  opponentTeam             ContestTeam?           @relation("OpponentTournamentTeam", fields: [opponentTeamId], references: [id], onDelete: Cascade)
+  contestCourtId           String?
+  contestCourt             ContestCourt?          @relation(fields: [contestCourtId], references: [id])
+  isWinner                 Boolean?               @default(false)
+  totalScore               String?
+  resultText               String?
+  loseScore                Int?
+  status                   String?
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+
+  @@unique([contestTeamId, opponentTeamId])
 }
 
 model ContestNotice {
-  id                Int      @id @default(autoincrement())
-  contestId         String
-  contest           Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  id                String   @id @default(uuid())
+  contestId         String?
+  contest           Contest? @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
   noticeTitle       String?
   noticeDiscription String?
   createdAt         DateTime @default(now())
@@ -767,12 +959,16 @@ model ContestNotice {
 }
 
 model ContestReport {
-  id                Int      @id @default(autoincrement())
-  contestId         String
-  contest           Contest  @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  id                String   @id @default(uuid())
+  contestId         String?
+  contest           Contest? @relation(fields: [contestId], references: [contestId], onDelete: Cascade)
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
   reportType        String?
   reportTitle       String?
   reportDiscription String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@unique([contestId, userId])
 }

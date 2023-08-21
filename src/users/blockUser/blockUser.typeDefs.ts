@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Mutation {
-    blockUser(id: Int): MutationResponse
+    blockUser(id: String): MutationResponse
   }
 `;

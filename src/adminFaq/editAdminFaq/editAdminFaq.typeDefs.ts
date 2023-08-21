@@ -2,6 +2,10 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Mutation {
-    editAdminFaq(id: Int, title: String, discription: String): MutationResponse
+    editAdminFaq(
+      id: String
+      title: String
+      discription: String
+    ): MutationResponse
   }
 `;

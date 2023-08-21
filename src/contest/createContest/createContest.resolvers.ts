@@ -26,14 +26,17 @@ const createContestResolvers = async (
     contestSportsDetail,
     contestDiscription,
     contestTerms,
+    contestAwardDetails,
     contestEntryFee,
     contestBanner,
+    contestRecruitNumber,
     activeArea,
   },
   { loggedInUser }
 ) => {
-  const date = new Date();
+  const date = Date.now();
   const contestId = "CT" + date;
+
   let imagePath = [];
   if (contestBanner !== null && contestBanner !== undefined) {
     imagePath = await uploadToLocals(contestBanner, "Contest");
@@ -64,8 +67,13 @@ const createContestResolvers = async (
       contestSportsDetail,
       contestDiscription,
       contestTerms,
+      contestAwardDetails,
       contestEntryFee,
-      contestBanner: imagePath[0],
+      contestRecruitNumber,
+      ...(contestBanner !== null &&
+        contestBanner !== undefined && {
+          contestBanner: imagePath[0],
+        }),
     },
   });
 

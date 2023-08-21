@@ -26,14 +26,14 @@ export default gql`
   }
 
   input GroupInput {
-    id: Int!
+    id: String!
     name: String
     addrRoad: String
     sportsEvent: String
   }
 
   input TutorSportsEventInput {
-    id: Int
+    id: String
     name: String
     imagePath: String
     isChecked: Boolean
@@ -47,7 +47,7 @@ export default gql`
   }
 
   input TutorTagInput {
-    id: Int
+    id: String
     name: String
     isUse: Boolean
   }

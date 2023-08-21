@@ -5,14 +5,20 @@ const createBannerResolvers = async (
   { title, discription, sortation, titleBannerImage },
   { client }
 ) => {
-  let bannerImagePath = await uploadToLocals(titleBannerImage, sortation);
+  let bannerImagePath = [];
+  if (titleBannerImage != undefined && titleBannerImage != null) {
+    bannerImagePath = await uploadToLocals(titleBannerImage, sortation);
+  }
 
   const result = await client.banner.create({
     data: {
       title,
       discription,
       sortation,
-      bannerImagePath: bannerImagePath[0],
+      ...(titleBannerImage !== null &&
+        titleBannerImage !== undefined && {
+          bannerImagePath: bannerImagePath[0],
+        }),
     },
   });
 

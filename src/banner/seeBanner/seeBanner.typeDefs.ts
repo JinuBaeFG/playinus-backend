@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Query {
-    seeBanner(id: Int): Banner
+    seeBanner(id: String): Banner
   }
 `;

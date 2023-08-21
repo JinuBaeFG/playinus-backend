@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 export default gql`
   type Mutation {
     editGroup(
-      id: Int
+      id: String
       name: String!
       discription: String
       sidoName: String
@@ -28,7 +28,7 @@ export default gql`
   }
 
   input GroupInfoInput {
-    id: Int
+    id: String
     discription: String
     awardDate: String
     isNew: Boolean
@@ -36,18 +36,18 @@ export default gql`
   }
 
   input GroupTagInput {
-    id: Int
+    id: String
     name: String
     isUse: Boolean
   }
 
   input GroupPresidentInput {
-    id: Int
+    id: String
     user: UserInput
   }
 
   input UserInput {
-    id: Int
+    id: String
     username: String
   }
 `;

@@ -6,7 +6,7 @@ export default gql`
   }
 
   type MyGroup {
-    id: Int
+    id: String
     name: String
     groupImage: GroupImage
   }

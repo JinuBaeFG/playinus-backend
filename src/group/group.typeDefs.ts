@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Group {
-    id: Int!
+    id: String!
     name: String
     discription: String
     sidoName: String
@@ -36,7 +36,7 @@ export default gql`
   }
 
   type GroupImage {
-    id: Int!
+    id: String!
     imagePath: String
     groupId: Group
     createdAt: String!
@@ -44,14 +44,14 @@ export default gql`
   }
 
   type GroupPresident {
-    id: Int!
+    id: String!
     user: User!
     createdAt: String!
     updatedAt: String!
   }
 
   type GroupInfo {
-    id: Int!
+    id: String!
     group: Group
     discription: String
     awardDate: String
@@ -60,7 +60,7 @@ export default gql`
   }
 
   type GroupTag {
-    id: Int!
+    id: String!
     name: String
     imagePath: String
     group: [Group]
@@ -69,7 +69,7 @@ export default gql`
   }
 
   type GroupJoinRequest {
-    id: Int
+    id: String
     group: Group
     user: User
     createdAt: String!
@@ -77,7 +77,7 @@ export default gql`
   }
 
   type GroupImage {
-    id: Int!
+    id: String!
     imagePath: String
     groupId: Group
     createdAt: String!

@@ -6,7 +6,7 @@ export default gql`
   }
 
   type GroupPresident {
-    id: Int!
+    id: String!
     user: User!
     createdAt: String!
     updatedAt: String!

@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Mutation {
-    deleteNotice(id: Int!): MutationResponse!
+    deleteNotice(id: String!): MutationResponse!
   }
 `;

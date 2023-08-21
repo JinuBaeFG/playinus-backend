@@ -57,10 +57,21 @@ export default {
             usetermAccess,
           },
         });
-
-        return {
-          ok: true,
-        };
+        const token = await jwt.sign(
+          { id: newUser.id },
+          process.env.SECRET_KEY
+        );
+        if (interlock !== "일반") {
+          return {
+            ok: true,
+            token,
+            interlock,
+          };
+        } else {
+          return {
+            ok: true,
+          };
+        }
       } catch (e) {
         return {
           ok: false,

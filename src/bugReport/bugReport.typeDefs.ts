@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type BugReport {
-    id: Int
+    id: String
     user: User
     reportTitle: String
     reportDiscription: String
@@ -12,7 +12,7 @@ export default gql`
   }
 
   type BugReportImage {
-    id: Int
+    id: String
     bugReport: BugReport
     imagePath: String
     createdAt: String

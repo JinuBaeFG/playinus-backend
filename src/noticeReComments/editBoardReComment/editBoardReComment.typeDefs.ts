@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Mutation {
-    editNoticeReComment(id: Int!, payload: String!): MutationResponse!
+    editNoticeReComment(id: String!, payload: String!): MutationResponse!
   }
 `;

@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Facility {
-    id: Int
+    id: String
     name: String
     discription: String
     sidoName: String
@@ -30,7 +30,7 @@ export default gql`
   }
 
   type FacilityImage {
-    id: Int!
+    id: String!
     facilityId: Facility
     imagePath: String
     createdAt: String!
@@ -38,7 +38,7 @@ export default gql`
   }
 
   type FacilityInfo {
-    id: Int
+    id: String
     facility: [Facility]
     facilityId: Int
     discription: String
@@ -48,7 +48,7 @@ export default gql`
   }
 
   type FacilityTag {
-    id: Int
+    id: String
     name: String
     imagePath: String
     isUse: Boolean
@@ -59,7 +59,7 @@ export default gql`
   }
 
   type FacilitySports {
-    id: Int
+    id: String
     name: String
     facility: [Facility]
     createdAt: String

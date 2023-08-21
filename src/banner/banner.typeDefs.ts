@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Banner {
-    id: Int
+    id: String
     title: String
     discription: String
     sidoName: String
