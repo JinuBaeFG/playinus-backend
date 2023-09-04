@@ -2,6 +2,13 @@ import client from "../client";
 
 export default {
   Contest: {
+    contestUserCount: ({ contestId }) => {
+      return client.contestUser.count({
+        where: {
+          contestId: contestId,
+        },
+      });
+    },
     contestUser: ({ id }) => {
       return client.contest
         .findUnique({

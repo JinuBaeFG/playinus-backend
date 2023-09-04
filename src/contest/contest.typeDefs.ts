@@ -32,6 +32,7 @@ export default gql`
     contestStatus: String
     contestPaymentMethod: String
     contestRecruitNumber: Int
+    contestUserCount: Int
     createdAt: String
     updatedAt: String
     contestBanner: String
