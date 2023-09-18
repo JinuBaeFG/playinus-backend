@@ -1,11 +1,10 @@
 import client from "../../client";
 import { cryptFunction } from "../users.utils";
 
-const findAccountResolvers = async (_, { phoneNumber }) => {
-  const uglyPhoneNumber = cryptFunction(phoneNumber);
+const findAccountResolvers = async (_, { email }) => {
   const result = await client.user.findUnique({
     where: {
-      phoneNumber: uglyPhoneNumber,
+      email: email,
     },
   });
 
@@ -14,6 +13,6 @@ const findAccountResolvers = async (_, { phoneNumber }) => {
 
 export default {
   Query: {
-    findAccountFromPhoneNumber: findAccountResolvers,
+    findAccountFromEmail: findAccountResolvers,
   },
 };

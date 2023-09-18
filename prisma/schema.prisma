@@ -60,7 +60,7 @@ model User {
   naverID             String?               @unique
   appleConnect        Boolean               @default(false)
   appleID             String?               @unique
-  phoneNumber         String                @unique
+  phoneNumber         String?               @unique
   privacyAccess       Boolean               @default(false)
   usetermAccess       Boolean               @default(false)
   locationAccess      Boolean               @default(false)

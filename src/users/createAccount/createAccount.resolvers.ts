@@ -10,7 +10,6 @@ export default {
         username,
         email,
         password,
-        phoneNumber,
         interlock,
         uid,
         privacyAccess,
@@ -21,14 +20,7 @@ export default {
       try {
         const existingUser = await client.user.findFirst({
           where: {
-            OR: [
-              {
-                email,
-              },
-              {
-                phoneNumber,
-              },
-            ],
+            email,
           },
         });
         if (existingUser) {
@@ -37,13 +29,12 @@ export default {
           );
         }
         const uglyPassword = await bcrypt.hash(password, 10);
-        const uglyPhoneNumber = cryptFunction(phoneNumber);
+        //const uglyPhoneNumber = cryptFunction(phoneNumber);
 
         const newUser = await client.user.create({
           data: {
             username,
             email,
-            phoneNumber: uglyPhoneNumber,
             password: uglyPassword,
             kakaoConnect: interlock === "kakao" ? true : false,
             kakaoID: interlock === "kakao" ? uid : null,

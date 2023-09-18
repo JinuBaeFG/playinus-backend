@@ -7,6 +7,7 @@ import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/users.utils";
 import * as http from "http";
 import axios from "axios";
+const nodemailer = require("nodemailer");
 const CryptoJS = require("crypto-js");
 const multer = require("multer");
 const path = require("path");
@@ -93,6 +94,43 @@ var corsOptions = {
 app.post("/api/uploads", upload.single("file"), (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.status(200).json(req.file);
+});
+
+app.get("/api/mailCertified", (req, res) => {
+  let crtNumber = "";
+
+  for (let i = 0; i < 4; i++) {
+    crtNumber += Math.floor(Math.random() * 10);
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: process.env.GOOGLE_EMAIL,
+    auth: {
+      user: process.env.GOOGLE_MAIL_ID,
+      pass: process.env.GOOGLE_PASS_KEY,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.GOOGLE_MAIL_ID,
+    to: req.query.email,
+    subject: "[체육마을] 본인 확인을 위한 메일 인증번호 입니다.",
+    text: crtNumber,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+    } else {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.status(200).json({
+        status: "Success",
+        code: 200,
+        message: "메일로 인증번호를 전송했습니다.",
+        crtNumber: crtNumber,
+      });
+    }
+  });
 });
 
 app.get("/api/certified", (req, res) => {
