@@ -2,6 +2,6 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Query {
-    findAccountFromPhoneNumber(phoneNumber: String): User
+    findAccountFromEmail(email: String): User
   }
 `;
